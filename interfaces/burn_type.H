@@ -177,6 +177,9 @@ struct burn_t
 #ifdef ACTUAL_NSE
   Real mu_p;
   Real mu_n;
+
+  // checks whether currently is approximately in nse and is able to proceed with ase
+  bool in_nse;
 #endif
   
   // diagnostics

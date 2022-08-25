@@ -264,4 +264,70 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-4_rt, bool input_ye_is_val
   return nse_state;
 }
 
+
+
+// Check whether to proceed with Adaptive statistical equilibrium
+template<typename T>
+void ase_check(T& state, T& nse_state){
+  // Input:
+  //
+  // state: current eos or burner state
+  // nse_state: current nse state, obtained from function: get_actual_nse_state
+  //
+  // Output:
+  // a boolean that tells whether it is okay to proceed with ase
+
+  int count{0};
+  amrex::Real r = 1.0_rt;
+  amrex::Real r_nse = 1.0_rt;
+  
+  // Check if neutron, proton, and helium are present in the network
+  for (int n = 0; n < NumSpec; ++n){
+    if (short_spec_names_cxx[n] == "H1" || short_spec_names_cxx[n] == "n" || short_spec_names_cxx[n] == "He4"){
+      ++count;
+    }
+}
+  if (count < 3){
+    amrex::Error("Current network does not include the proton, neutron, or helium-4, thus cannot proceed with ASE.");
+  }
+
+  // Check if n,p,a are in equilibrium
+  // these two ratios are defined in the ASE paper to determine whether network is in equilibrium
+  for (int n = 0; n < NumSpec; ++n){
+
+    if (short_spec_names_cxx[n] == "H1" || short_spec_names_cxx[n] = "n"){
+      r /= std::sqrt(state.xn[n] * aion_inv[n]);
+      r_nse /= std::sqrt(nse_state.xn[n] * aion_inv[n]);
+    } 
+    
+    else if (short_spec_names_cxx[n] == "He4"){
+      r *= state.xn[n] * aion_inv[n];
+      r_nse *= nse_state.xn[n] * aion_inv[n];
+    }
+  }
+
+  // equilibrium condition: if pass proceed with ase if not proceed with regular eos integration
+  if (std::abs((r - r_nse) / r) < 0.5){
+    state.in_nse = true;
+  }
+  else{
+    state.in_nse = false;
+  }
+
+}
+
+template <typename T>
+void ase (T& state, T& nse_state){
+
+  if (!state.in_nse){
+    amrex::Error("state currently not in nse, call ase_check before doing ase");
+  }
+
+  amrex::Real inverse_u;
+  amrex::
+  
+}
+
+	    
+  
 #endif
