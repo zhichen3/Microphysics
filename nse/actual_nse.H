@@ -324,8 +324,33 @@ void ase (T& state, T& nse_state){
   }
 
   amrex::Real inverse_u;
-  amrex::
-  
+  amrex::Array1D Y<amrex::Real, 0, NumSpec-1>;
+  //amrex::Real Y[NumSpec];
+
+  for (int n = 0; n < NumSpec; ++n){
+    Y[n] = state.xn[n] * inv_aion[n];
+  }
+
+  // Need speed of sound and simulation mesh size
+  amrex::Real dx = dx;
+  amrex::Real t_s = dx / state.cs;
+
+  e = state.e;
+  // state.e = internal energy state.cs=? speed of sound  state.mu, state.mu_e
+  // Get ydot
+
+  // f = 0.05
+
+  // Parameters defined in the ase paper to find the burning limiter f_lim
+  amrex::Real Y_npa = 0.0_rt;
+  amrex::Real Y_npa_dot = 0.0_rt;
+  amrex::Real Y_tilde = 0.0_rt;
+  amrex::Real Y_tild_dot = 0.0_rt;
+  amrex::Real X_npa = 0.0_rt;
+  amrex::Real X_tilde = 0.0_rt;
+
+  // q_dot = Hnuc?
+  // ydot = Y_i+1 -Y_i/ t  
 }
 
 	    
