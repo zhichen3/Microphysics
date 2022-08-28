@@ -66,6 +66,7 @@ void init_actual_nse(){
 
 // struct to store output from constraint equations and jacobian for
 // newton-raphson
+
 struct Newton_inputs{
   amrex::Array1D<amrex::Real, 0, 1> eqs;
   amrex::Array2D<amrex::Real, 0, 1, 0, 1> jac;
@@ -561,10 +562,7 @@ void ase (T& state, T& nse_state){
   // using namespace Rates; (enumerate over different rates)
 
   
- 
-  
-				  
-  
+   
 }
   
 #endif
