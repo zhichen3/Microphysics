@@ -71,11 +71,10 @@ namespace NSE_INDEX
   extern AMREX_GPU_MANAGED int he4_index;
 }
 
-
 // Initialization for nse, check whether network is valid and stores indices
 void init_actual_nse(){
   
-  for (n = 0; n < NumSpec; ++n){
+  for (int n = 0; n < NumSpec; ++n){
 
     // store index of photoionization proton by looking for Z=1 but exclude h1 which is always at index=0
     if (zion[n] == 1 && aion[n] == 1){
@@ -92,7 +91,7 @@ void init_actual_nse(){
     }
     
     else if (zion[n] == 2 && aion[n] == 4){
-      NSE_INDEX::he_index = n;
+      NSE_INDEX::he4_index = n;
     }
   }
 
@@ -221,7 +220,7 @@ Newton_inputs nse_constraint(const T& state){
 // A newton-raphson solver for finding nse state used for calibrating chemical potential of proton and neutron
 template<typename T>
 void nse_nr_solver(T& state, amrex::Real eps=1.0e-3_rt) {
-
+  
   bool converged = false;                                     // whether nse solver converged or not
 
   Newton_inputs f = nse_constraint(state);                    // get constraint eqs and jacobian
@@ -297,7 +296,10 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-4_rt, bool input_ye_is_val
   if (!NSE_INDEX::initialized){
     amrex::Error("NSE uninitialized! Need to call init_actual_nse() ");
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> a1bc37a1 (initial commit for adding init function for nse)
   // Check whether input ye is actually valid
   amrex::Real ye_lo = 1.0_rt;
   amrex::Real ye_hi = 0.0_rt;
