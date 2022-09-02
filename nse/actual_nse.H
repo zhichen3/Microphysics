@@ -62,7 +62,6 @@ void init_actual_nse(){
 
   NSE_INDEX::initialized = true;
 }
-  
 
 // struct to store output from constraint equations and jacobian for
 // newton-raphson
@@ -402,6 +401,7 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-4_rt, bool input_ye_is_val
 
 
 
+
 // Check whether to proceed with Adaptive statistical equilibrium
 template<typename T>
 void ase_check(T& state, T& nse_state){
@@ -441,6 +441,7 @@ void ase_check(T& state, T& nse_state){
       r_nse *= nse_state.xn[n] * aion_inv[n];
     }
   }
+
 
   // equilibrium condition: if pass proceed with ase if not proceed with regular eos integration
   if (std::abs((r - r_nse) / r) < 0.5){
@@ -545,6 +546,7 @@ void ase (T& state, T& nse_state){
     }
   }
 
+
   // Find the burning limiters based on Equation 6 and 7 in ase paper.
   // assume state.e is the total specific internal energy of the system.
   amrex::Real f_e = amrex::min(1.0_rt, state.e * f_lim / std::abs(enuc) / t_s);
@@ -553,6 +555,7 @@ void ase (T& state, T& nse_state){
 
   // f_full is the actual burning limiter we use.
   
+
   amrex::Real f_full = amrex::min(f_e, 1.0_rt / (X_npa / f_npa + X_tilde / f_tilde));
 
   // Now we look through the network and see if there are fast reaction cycles
