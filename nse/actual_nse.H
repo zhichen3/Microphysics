@@ -56,64 +56,6 @@ void init_actual_nse(){
 
   NSE_INDEX::initialized = true;
 }
-
-
-namespace NSE_INDEX
-{
-  extern bool initialized;
-  
-  // store indices:
-  extern AMREX_GPU_MANAGED int p_index;
-  
-  // these three indices are helpful for implementing adaptive statistical equilibrium.  
-  extern AMREX_GPU_MANAGED int h1_index;
-  extern AMREX_GPU_MANAGED int n_index;
-  extern AMREX_GPU_MANAGED int he4_index;
-}
-
-// Initialization for nse, check whether network is valid and stores indices
-void init_actual_nse(){
-  
-  for (int n = 0; n < NumSpec; ++n){
-
-    // store index of photoionization proton by looking for Z=1 but exclude h1 which is always at index=0
-    if (zion[n] == 1 && aion[n] == 1){
-      if (n == 0){
-	NSE_INDEX::h1_index = n;
-      }
-      else {
-	NSE_INDEX::p_index = n;
-      }
-    }
-    
-    else if (zion[n] == 0){
-      NSE_INDEX::n_index = n;
-    }
-    
-    else if (zion[n] == 2 && aion[n] == 4){
-      NSE_INDEX::he4_index = n;
-    }
-  }
-
-  
-  // Check if network results in singular jacobian first, require at least one nuclei that nuclei.Z != nuclei.N
-  // Some examples include aprox13 and iso7
-  bool singular_network = true;
-  for (int n = 0; n < NumSpec; ++n){
-    if (n == NSE_INDEX::p_index){
-      continue;
-    }
-    if (zion[n] != aion[n] - zion[n]){
-      singular_network = false;
-    }
-  }
-
-  if (singular_network == true){
-    amrex::Error("This network always results in singular jacobian matrix, thus can't find nse mass fraction!");
-  }
-
-  NSE_INDEX::initialized = true;
-}
   
 
 // struct to store output from constraint equations and jacobian for newton-raphson
@@ -325,130 +267,130 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-4_rt, bool input_ye_is_val
 
 
 
-// Check whether to proceed with Adaptive statistical equilibrium
-template<typename T>
-void ase_check(T& state, T& nse_state){
-  // Input:
-  //
-  // state: current eos or burner state
-  // nse_state: current nse state, obtained from function: get_actual_nse_state
-  //
-  // Output:
-  // a boolean that tells whether it is okay to proceed with ase
+// // Check whether to proceed with Adaptive statistical equilibrium
+// template<typename T>
+// void ase_check(T& state, T& nse_state){
+//   // Input:
+//   //
+//   // state: current eos or burner state
+//   // nse_state: current nse state, obtained from function: get_actual_nse_state
+//   //
+//   // Output:
+//   // a boolean that tells whether it is okay to proceed with ase
 
-  int count{0};
-  amrex::Real r = 1.0_rt;
-  amrex::Real r_nse = 1.0_rt;
+//   int count{0};
+//   amrex::Real r = 1.0_rt;
+//   amrex::Real r_nse = 1.0_rt;
   
-  // Check if neutron, proton, and helium are present in the network
-  for (int n = 0; n < NumSpec; ++n){
-    if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n){
-      ++count;
-    }
-}
-  if (count < 3){
-    amrex::Error("Current network does not include the proton, neutron, or helium-4, thus cannot proceed with ASE.");
-  }
+//   // Check if neutron, proton, and helium are present in the network
+//   for (int n = 0; n < NumSpec; ++n){
+//     if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n){
+//       ++count;
+//     }
+// }
+//   if (count < 3){
+//     amrex::Error("Current network does not include the proton, neutron, or helium-4, thus cannot proceed with ASE.");
+//   }
 
-  // Check if n,p,a are in equilibrium
-  // these two ratios are defined in the ASE paper to determine whether network is in equilibrium
-  for (int n = 0; n < NumSpec; ++n){
+//   // Check if n,p,a are in equilibrium
+//   // these two ratios are defined in the ASE paper to determine whether network is in equilibrium
+//   for (int n = 0; n < NumSpec; ++n){
 
-    if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index = n){
-      r /= std::sqrt(state.xn[n] * aion_inv[n]);
-      r_nse /= std::sqrt(nse_state.xn[n] * aion_inv[n]);
-    } 
+//     if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index = n){
+//       r /= std::sqrt(state.xn[n] * aion_inv[n]);
+//       r_nse /= std::sqrt(nse_state.xn[n] * aion_inv[n]);
+//     } 
     
-    else if (NSE_INDEX::h4_index == n){
-      r *= state.xn[n] * aion_inv[n];
-      r_nse *= nse_state.xn[n] * aion_inv[n];
-    }
-  }
+//     else if (NSE_INDEX::h4_index == n){
+//       r *= state.xn[n] * aion_inv[n];
+//       r_nse *= nse_state.xn[n] * aion_inv[n];
+//     }
+//   }
 
-  // equilibrium condition: if pass proceed with ase if not proceed with regular eos integration
-  if (std::abs((r - r_nse) / r) < 0.5){
-    state.in_nse = true;
-  }
-  else{
-    state.in_nse = false;
-  }
+//   // equilibrium condition: if pass proceed with ase if not proceed with regular eos integration
+//   if (std::abs((r - r_nse) / r) < 0.5){
+//     state.in_nse = true;
+//   }
+//   else{
+//     state.in_nse = false;
+//   }
 
-  // invoke newton-raphson to solve chemical potential of proton and neutron
-  nse_nr_solver(state, eps);
+//   // invoke newton-raphson to solve chemical potential of proton and neutron
+//   nse_nr_solver(state, eps);
   
-  // get the nse_state
-  T nse_state = get_nse_state(state);
+//   // get the nse_state
+//   T nse_state = get_nse_state(state);
 
-  return nse_state;    
-}
+//   return nse_state;    
+// }
 
-template <typename T>
-void ase (T& state, T& nse_state){
+// template <typename T>
+// void ase (T& state, T& nse_state){
 
-  // Runtime parameters:
-  // f: characteritic scale for the burning limiter, ~0.05
-  // cell_dx: size of simulation mesh, ~1.0e6
-  // 
-  // assume we have f, dx
+//   // Runtime parameters:
+//   // f: characteritic scale for the burning limiter, ~0.05
+//   // cell_dx: size of simulation mesh, ~1.0e6
+//   // 
+//   // assume we have f, dx
   
-  // Update whether state is about in NSE in order to do ASE.
-  ase_check(state, nse_state);
-  if (!state.in_nse){
-    amrex::Error("state currently not in NSE, switch to eos!");
-  }
+//   // Update whether state is about in NSE in order to do ASE.
+//   ase_check(state, nse_state);
+//   if (!state.in_nse){
+//     amrex::Error("state currently not in NSE, switch to eos!");
+//   }
 
-  //  amrex::Real inverse_u;
-  amrex::Array1D Y<amrex::Real, 0, NumSpec-1>;
-  //amrex::Real Y[NumSpec];
+//   //  amrex::Real inverse_u;
+//   amrex::Array1D Y<amrex::Real, 0, NumSpec-1>;
+//   //amrex::Real Y[NumSpec];
 
-  for (int n = 0; n < NumSpec; ++n){
-    if (NSE_INDEX::p_index == n){
-      continue;
-    }
-    Y[n] = state.xn[n] * inv_aion[n];
-  }
+//   for (int n = 0; n < NumSpec; ++n){
+//     if (NSE_INDEX::p_index == n){
+//       continue;
+//     }
+//     Y[n] = state.xn[n] * inv_aion[n];
+//   }
 
-  // Need speed of sound and simulation mesh size, make dx: global variable
-  //amrex::Real dx = dx;
-  amrex::Real t_s = cell_dx / state.cs;
+//   // Need speed of sound and simulation mesh size, make dx: global variable
+//   //amrex::Real dx = dx;
+//   amrex::Real t_s = cell_dx / state.cs;
 
-  // Here e is assumed to be the total specific internal energy of the system.
-  e = state.e;
+//   // Here e is assumed to be the total specific internal energy of the system.
+//   e = state.e;
 
-  // Get Y dot
-  amrex::Real Y_dot[NumSpec] = ;
+//   // Get Y dot
+//   amrex::Real Y_dot[NumSpec] = ;
   
-  // Need energy generation rate q_dot = enuc,
-  amrex::Real q_dot;
-  amrex::Real enuc;
-  ener_gener_rate(Y_dot, enuc);
+//   // Need energy generation rate q_dot = enuc,
+//   amrex::Real q_dot;
+//   amrex::Real enuc;
+//   ener_gener_rate(Y_dot, enuc);
   
-  // Parameters defined in the ase paper to find the burning limiter f_lim
-  amrex::Real Y_npa = 0.0_rt;
-  amrex::Real Y_npa_dot = 0.0_rt;
-  amrex::Real Y_tilde = 0.0_rt;
-  amrex::Real Y_tild_dot = 0.0_rt;
-  amrex::Real X_npa = 0.0_rt;
-  amrex::Real X_tilde = 0.0_rt;
+//   // Parameters defined in the ase paper to find the burning limiter f_lim
+//   amrex::Real Y_npa = 0.0_rt;
+//   amrex::Real Y_npa_dot = 0.0_rt;
+//   amrex::Real Y_tilde = 0.0_rt;
+//   amrex::Real Y_tild_dot = 0.0_rt;
+//   amrex::Real X_npa = 0.0_rt;
+//   amrex::Real X_tilde = 0.0_rt;
 
-  for (int n = 0; n < NumSpec; ++n){
-    if (NSE_INDEX::p_index == n){
-      continue;
-    }
-    if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n ){
-      X_npa += state.xn[n];
-      Y_npa += Y[n];
-    }
-    else{
-      X_tilde += state.xn[n];
-      Y_tilde += Y[n];
-    }
-  }
+//   for (int n = 0; n < NumSpec; ++n){
+//     if (NSE_INDEX::p_index == n){
+//       continue;
+//     }
+//     if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n ){
+//       X_npa += state.xn[n];
+//       Y_npa += Y[n];
+//     }
+//     else{
+//       X_tilde += state.xn[n];
+//       Y_tilde += Y[n];
+//     }
+//   }
 
   
   
-  // q_dot = Hnuc?
-  // ydot = Y_i+1 -Y_i/ t  
-}
+//   // q_dot = Hnuc?
+//   // ydot = Y_i+1 -Y_i/ t  
+// }
   
 #endif
