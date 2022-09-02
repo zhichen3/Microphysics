@@ -466,6 +466,7 @@ void ase (T& state, T& nse_state){
     amrex::Error("state currently not in NSE, switch to eos!");
   }
 
+
   // set molar fractions
   // initialize ydot to store Ydot and energy generation rate.
   
@@ -531,6 +532,7 @@ void ase (T& state, T& nse_state){
     if (NSE_INDEX::p_index == n){
       continue;
     }
+
     if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n){
       X_npa += state.xn[n];
       Y_npa += Y(n+1);
@@ -561,8 +563,6 @@ void ase (T& state, T& nse_state){
   // using namespace Species; (enumerate over different species)
   // using namespace Rates; (enumerate over different rates)
 
-  
-   
 }
   
 #endif
