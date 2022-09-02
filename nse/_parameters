@@ -1,3 +1,5 @@
 @namespace: nse
 
 max_nse_iters    integer    500
+f                real       0.05
+cell_dx          real       1.0e6

@@ -296,10 +296,7 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-4_rt, bool input_ye_is_val
   if (!NSE_INDEX::initialized){
     amrex::Error("NSE uninitialized! Need to call init_actual_nse() ");
   }
-<<<<<<< HEAD
 
-=======
->>>>>>> a1bc37a1 (initial commit for adding init function for nse)
   // Check whether input ye is actually valid
   amrex::Real ye_lo = 1.0_rt;
   amrex::Real ye_hi = 0.0_rt;
@@ -345,7 +342,7 @@ void ase_check(T& state, T& nse_state){
   
   // Check if neutron, proton, and helium are present in the network
   for (int n = 0; n < NumSpec; ++n){
-    if (short_spec_names_cxx[n] == "H1" || short_spec_names_cxx[n] == "n" || short_spec_names_cxx[n] == "He4"){
+    if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n){
       ++count;
     }
 }
@@ -357,12 +354,12 @@ void ase_check(T& state, T& nse_state){
   // these two ratios are defined in the ASE paper to determine whether network is in equilibrium
   for (int n = 0; n < NumSpec; ++n){
 
-    if (short_spec_names_cxx[n] == "H1" || short_spec_names_cxx[n] = "n"){
+    if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index = n){
       r /= std::sqrt(state.xn[n] * aion_inv[n]);
       r_nse /= std::sqrt(nse_state.xn[n] * aion_inv[n]);
     } 
     
-    else if (short_spec_names_cxx[n] == "He4"){
+    else if (NSE_INDEX::h4_index == n){
       r *= state.xn[n] * aion_inv[n];
       r_nse *= nse_state.xn[n] * aion_inv[n];
     }
@@ -374,6 +371,7 @@ void ase_check(T& state, T& nse_state){
   }
   else{
     state.in_nse = false;
+  }
 
   // invoke newton-raphson to solve chemical potential of proton and neutron
   nse_nr_solver(state, eps);
@@ -387,28 +385,44 @@ void ase_check(T& state, T& nse_state){
 template <typename T>
 void ase (T& state, T& nse_state){
 
+  // Runtime parameters:
+  // f: characteritic scale for the burning limiter, ~0.05
+  // cell_dx: size of simulation mesh, ~1.0e6
+  // 
+  // assume we have f, dx
+  
+  // Update whether state is about in NSE in order to do ASE.
+  ase_check(state, nse_state);
   if (!state.in_nse){
-    amrex::Error("state currently not in nse, call ase_check before doing ase");
+    amrex::Error("state currently not in NSE, switch to eos!");
   }
 
-  amrex::Real inverse_u;
+  //  amrex::Real inverse_u;
   amrex::Array1D Y<amrex::Real, 0, NumSpec-1>;
   //amrex::Real Y[NumSpec];
 
   for (int n = 0; n < NumSpec; ++n){
+    if (NSE_INDEX::p_index == n){
+      continue;
+    }
     Y[n] = state.xn[n] * inv_aion[n];
   }
 
-  // Need speed of sound and simulation mesh size
-  amrex::Real dx = dx;
-  amrex::Real t_s = dx / state.cs;
+  // Need speed of sound and simulation mesh size, make dx: global variable
+  //amrex::Real dx = dx;
+  amrex::Real t_s = cell_dx / state.cs;
 
+  // Here e is assumed to be the total specific internal energy of the system.
   e = state.e;
-  // state.e = internal energy state.cs=? speed of sound  state.mu, state.mu_e
-  // Get ydot
 
-  // f = 0.05
-
+  // Get Y dot
+  amrex::Real Y_dot[NumSpec] = ;
+  
+  // Need energy generation rate q_dot = enuc,
+  amrex::Real q_dot;
+  amrex::Real enuc;
+  ener_gener_rate(Y_dot, enuc);
+  
   // Parameters defined in the ase paper to find the burning limiter f_lim
   amrex::Real Y_npa = 0.0_rt;
   amrex::Real Y_npa_dot = 0.0_rt;
@@ -417,6 +431,22 @@ void ase (T& state, T& nse_state){
   amrex::Real X_npa = 0.0_rt;
   amrex::Real X_tilde = 0.0_rt;
 
+  for (int n = 0; n < NumSpec; ++n){
+    if (NSE_INDEX::p_index == n){
+      continue;
+    }
+    if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n ){
+      X_npa += state.xn[n];
+      Y_npa += Y[n];
+    }
+    else{
+      X_tilde += state.xn[n];
+      Y_tilde += Y[n];
+    }
+  }
+
+  
+  
   // q_dot = Hnuc?
   // ydot = Y_i+1 -Y_i/ t  
 }
