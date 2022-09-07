@@ -2,9 +2,9 @@
 
 max_nse_iters    integer    500
 
-
 use_hybrid_solver    integer   0
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 f_lim            integer    0.5
 cell_dx          real       1.0e6_rt
@@ -12,4 +12,8 @@ cell_dx          real       1.0e6_rt
 f                real       0.05
 cell_dx          real       1.0e6
 >>>>>>> defe859e (update)
+=======
+f_lim            integer    0.5
+cell_dx          real       1.0e6_rt
+>>>>>>> 1954c47c (finds ydot and energy generations)
 

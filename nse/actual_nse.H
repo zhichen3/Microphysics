@@ -400,8 +400,6 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-4_rt, bool input_ye_is_val
 }
 
 
-
-
 // Check whether to proceed with Adaptive statistical equilibrium
 template<typename T>
 void ase_check(T& state, T& nse_state){
@@ -441,7 +439,6 @@ void ase_check(T& state, T& nse_state){
       r_nse *= nse_state.xn[n] * aion_inv[n];
     }
   }
-
 
   // equilibrium condition: if pass proceed with ase if not proceed with regular eos integration
   if (std::abs((r - r_nse) / r) < 0.5){
@@ -487,6 +484,7 @@ void ase (T& state, T& nse_state){
 
   // Find ydot and energy generation rate
   // Currently also considering neutrino thermal loss if neutrino included
+  
 #ifdef NEW_NETWORK_IMPLEMENTATION
   // rhs_t rhs_data(rate), rate is a string (enum to be indices);
   
@@ -565,6 +563,7 @@ void ase (T& state, T& nse_state){
   // For subch networks, need to figure out some ways to access different rates
   // using namespace Species; (enumerate over different species)
   // using namespace Rates; (enumerate over different rates)
+
 
 }
   
