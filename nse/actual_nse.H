@@ -267,130 +267,148 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-4_rt, bool input_ye_is_val
 
 
 
-// // Check whether to proceed with Adaptive statistical equilibrium
-// template<typename T>
-// void ase_check(T& state, T& nse_state){
-//   // Input:
-//   //
-//   // state: current eos or burner state
-//   // nse_state: current nse state, obtained from function: get_actual_nse_state
-//   //
-//   // Output:
-//   // a boolean that tells whether it is okay to proceed with ase
+// Check whether to proceed with Adaptive statistical equilibrium
+template<typename T>
+void ase_check(T& state, T& nse_state){
+  // Input:
+  //
+  // state: current eos or burner state
+  // nse_state: current nse state, obtained from function: get_actual_nse_state
+  //
+  // Purpose:
+  // a boolean (state.in_nse) that tells whether it is okay to proceed with ase
 
-//   int count{0};
-//   amrex::Real r = 1.0_rt;
-//   amrex::Real r_nse = 1.0_rt;
+  int count{0};
+  amrex::Real r = 1.0_rt;
+  amrex::Real r_nse = 1.0_rt;
   
-//   // Check if neutron, proton, and helium are present in the network
-//   for (int n = 0; n < NumSpec; ++n){
-//     if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n){
-//       ++count;
-//     }
-// }
-//   if (count < 3){
-//     amrex::Error("Current network does not include the proton, neutron, or helium-4, thus cannot proceed with ASE.");
-//   }
+  // Check if neutron, proton, and helium are present in the network
+  for (int n = 0; n < NumSpec; ++n){
+    if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n){
+      ++count;
+    }
+}
+  if (count < 3){
+    amrex::Error("Current network does not include the proton, neutron, or helium-4, thus cannot proceed with ASE.");
+  }
 
-//   // Check if n,p,a are in equilibrium
-//   // these two ratios are defined in the ASE paper to determine whether network is in equilibrium
-//   for (int n = 0; n < NumSpec; ++n){
+  // Check if n,p,a are in equilibrium
+  // these two ratios are defined in the ASE paper to determine whether network is in equilibrium
+  for (int n = 0; n < NumSpec; ++n){
 
-//     if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index = n){
-//       r /= std::sqrt(state.xn[n] * aion_inv[n]);
-//       r_nse /= std::sqrt(nse_state.xn[n] * aion_inv[n]);
-//     } 
+    if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index = n){
+      r /= std::sqrt(state.xn[n] * aion_inv[n]);
+      r_nse /= std::sqrt(nse_state.xn[n] * aion_inv[n]);
+    } 
     
-//     else if (NSE_INDEX::h4_index == n){
-//       r *= state.xn[n] * aion_inv[n];
-//       r_nse *= nse_state.xn[n] * aion_inv[n];
-//     }
-//   }
+    else if (NSE_INDEX::h4_index == n){
+      r *= state.xn[n] * aion_inv[n];
+      r_nse *= nse_state.xn[n] * aion_inv[n];
+    }
+  }
 
-//   // equilibrium condition: if pass proceed with ase if not proceed with regular eos integration
-//   if (std::abs((r - r_nse) / r) < 0.5){
-//     state.in_nse = true;
-//   }
-//   else{
-//     state.in_nse = false;
-//   }
+  // equilibrium condition: if pass proceed with ase if not proceed with regular eos integration
+  if (std::abs((r - r_nse) / r) < 0.5){
+    state.in_nse = true;
+  }
+  else{
+    state.in_nse = false;
+  }
+}
 
-//   // invoke newton-raphson to solve chemical potential of proton and neutron
-//   nse_nr_solver(state, eps);
+template <typename T>
+void ase (T& state, T& nse_state){
+
+  // Runtime parameters:
+  // f: characteritic scale for the burning limiter, ~0.05
+  // cell_dx: size of simulation mesh, ~1.0e6
+  // 
+  // assume we have f, dx
   
-//   // get the nse_state
-//   T nse_state = get_nse_state(state);
+  // Update whether state is about in NSE in order to do ASE.
+  ase_check(state, nse_state);
+  if (!state.in_nse){
+    amrex::Error("state currently not in NSE, switch to eos!");
+  }
 
-//   return nse_state;    
-// }
-
-// template <typename T>
-// void ase (T& state, T& nse_state){
-
-//   // Runtime parameters:
-//   // f: characteritic scale for the burning limiter, ~0.05
-//   // cell_dx: size of simulation mesh, ~1.0e6
-//   // 
-//   // assume we have f, dx
+  // set molar fractions
+  // initialize ydot to store Ydot and energy generation rate.
   
-//   // Update whether state is about in NSE in order to do ASE.
-//   ase_check(state, nse_state);
-//   if (!state.in_nse){
-//     amrex::Error("state currently not in NSE, switch to eos!");
-//   }
+  amrex::Array1D<amrex::Real, 1, NumSpec> Y;
+  amrex::Array1D<amrex::Real, 1, NumSpec + 1> ydot;
+  for (int n = 1; n <= NumSpec; ++n){
+    if (NSE_INDEX::p_index == n-1){
+      continue;
+    }
+    Y(n) = state.xn[n-1] * inv_aion[n-1];
+    ydot(n) = 0.0_rt;
+  }
 
-//   //  amrex::Real inverse_u;
-//   amrex::Array1D Y<amrex::Real, 0, NumSpec-1>;
-//   //amrex::Real Y[NumSpec];
-
-//   for (int n = 0; n < NumSpec; ++n){
-//     if (NSE_INDEX::p_index == n){
-//       continue;
-//     }
-//     Y[n] = state.xn[n] * inv_aion[n];
-//   }
-
-//   // Need speed of sound and simulation mesh size, make dx: global variable
-//   //amrex::Real dx = dx;
-//   amrex::Real t_s = cell_dx / state.cs;
-
-//   // Here e is assumed to be the total specific internal energy of the system.
-//   e = state.e;
-
-//   // Get Y dot
-//   amrex::Real Y_dot[NumSpec] = ;
+  // Need speed of sound and simulation mesh size, make dx: global variable ~ 1.0e6
   
-//   // Need energy generation rate q_dot = enuc,
-//   amrex::Real q_dot;
-//   amrex::Real enuc;
-//   ener_gener_rate(Y_dot, enuc);
+  amrex::Real t_s = cell_dx / state.cs;
   
-//   // Parameters defined in the ase paper to find the burning limiter f_lim
-//   amrex::Real Y_npa = 0.0_rt;
-//   amrex::Real Y_npa_dot = 0.0_rt;
-//   amrex::Real Y_tilde = 0.0_rt;
-//   amrex::Real Y_tild_dot = 0.0_rt;
-//   amrex::Real X_npa = 0.0_rt;
-//   amrex::Real X_tilde = 0.0_rt;
+  // Get ydot and energy generation rate, copy routine from  rhs_nuc(state, ydot)
+  
+  // rate_t rate_eval;
 
-//   for (int n = 0; n < NumSpec; ++n){
-//     if (NSE_INDEX::p_index == n){
-//       continue;
-//     }
-//     if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n ){
-//       X_npa += state.xn[n];
-//       Y_npa += Y[n];
-//     }
-//     else{
-//       X_tilde += state.xn[n];
-//       Y_tilde += Y[n];
-//     }
-//   }
+  // constexpr int do_T_derivatives = 0;
+  // evaluate_rates<do_T_derivatives, rate_t>(state, rate_eval);
 
+  // Find ydot and energy generation rate
+  // Currently also considering neutrino thermal loss if neutrino included
+#ifdef NEW_NETWORK_IMPLEMENTATION
+  RHS::rhs(state, ydot);
+#else
+  //rhs_nuc(state, ydot, rate_eval.screened_rates);
+  actual_rhs(state, ydot);
+#endif
+  
+  // ener_gener_rate(ydot, enuc);
+  
+  // Declare parameters defined in the ase paper to find the burning limiter f_lim
+  
+  amrex::Real Y_npa = 0.0_rt;
+  amrex::Real Y_npa_dot = 0.0_rt;
+  amrex::Real Y_tilde = 0.0_rt;
+  amrex::Real Y_tilde_dot = 0.0_rt;
+  amrex::Real X_npa = 0.0_rt;
+  amrex::Real X_tilde = 0.0_rt;
+
+  for (int n = 0; n < NumSpec; ++n){
+    if (NSE_INDEX::p_index == n){
+      continue;
+    }
+    if (NSE_INDEX::h1_index == n || NSE_INDEX::n_index == n || NSE_INDEX::he4_index == n){
+      X_npa += state.xn[n];
+      Y_npa += Y(n+1);
+      Y_npa_dot += ydot(n+1)
+    }
+    else{
+      X_tilde += state.xn[n];
+      Y_tilde += Y(n+1);
+      Y_tilde_dot += ydot(n+1)
+    }
+  }
+
+  // Find the burning limiters based on Equation 6 and 7 in ase paper.
+  // assume state.e is the total specific internal energy of the system.
+  amrex::Real f_e = amrex::min(1.0_rt, state.e * f_lim / std::abs(enuc) / t_s);
+  amrex::Real f_npa = amrex::min(1.0_rt, Y_npa * f_lim / std::abs(Y_npa_dot) / t_s);
+  amrex::Real f_tilde = amrex::min(1.0_rt, Y_tilde * f_lim / std::abs(Y_tilde_dot) / t_s);
+
+  // f_full is the actual burning limiter we use.
+  
+  amrex::Real f_full = amrex::min(f_e, 1.0_rt / (X_npa / f_npa + X_tilde / f_tilde));
+
+  // Now we look through the network and see if there are fast reaction cycles
+  // Need to separate forward and reverse rate and detemine each step is fast enough.
   
   
-//   // q_dot = Hnuc?
-//   // ydot = Y_i+1 -Y_i/ t  
-// }
+ 
+  
+				  
+  
+}
   
 #endif
