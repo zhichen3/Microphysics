@@ -347,21 +347,38 @@ void ase (T& state, T& nse_state){
   // Need speed of sound and simulation mesh size, make dx: global variable ~ 1.0e6
   
   amrex::Real t_s = cell_dx / state.cs;
-  
-  // Get ydot and energy generation rate, copy routine from  rhs_nuc(state, ydot)
-  
-  // rate_t rate_eval;
-
-  // constexpr int do_T_derivatives = 0;
-  // evaluate_rates<do_T_derivatives, rate_t>(state, rate_eval);
 
   // Find ydot and energy generation rate
   // Currently also considering neutrino thermal loss if neutrino included
 #ifdef NEW_NETWORK_IMPLEMENTATION
+  // rhs_t rhs_data(rate), rate is a string (enum to be indices);
+  
+  
   RHS::rhs(state, ydot);
 #else
-  //rhs_nuc(state, ydot, rate_eval.screened_rates);
-  actual_rhs(state, ydot);
+  // Get rates, ydot,and energy generation rate, copy routine from  rhs_nuc(state, ydot)
+  
+  // Find individual rates
+  rate_t rate_eval;
+  constexpr do_T_derivatives = 0;
+  evaluate_rates<do_T_derivatives, rate_t>(state, rate_eval);
+
+  // Find ydot
+  rhs_nuc(state, ydot, rate_eval.screened_rates);
+
+  // Find energy generation rate
+  amrex::Real enuc;
+  ener_gener_rate(ydot, enuc);
+
+#ifdef NEUTRINOS
+  amrex::Real sneut, dsneutdt, dsneutdd, snuda, snudz;
+  sneut5(state.T, state.rho, state.abar, state.zbar, sneut, dsneutdt, dsneutdd, snuda, snudz);
+#else
+  amrex::Real sneut = 0.0_rt, dsneutdt =0.0_rt , dsneutdd = 0.0_rt, snuda = 0.0_rt, snudz = 0.0_rt;
+#endif
+  
+  ydot(NumSpec + 1) = enuc - sneut;
+  //  actual_rhs(state, ydot);
 #endif
   
   // ener_gener_rate(ydot, enuc);
@@ -403,7 +420,12 @@ void ase (T& state, T& nse_state){
 
   // Now we look through the network and see if there are fast reaction cycles
   // Need to separate forward and reverse rate and detemine each step is fast enough.
-  
+
+  // For NEW_NETWOR_IMPLEMENTATION: there is seems to have information about it in rhs_data
+  // For subch networks, need to figure out some ways to access different rates
+  // using namespace Species; (enumerate over different species)
+  // using namespace Rates; (enumerate over different rates)
+
   
  
   
