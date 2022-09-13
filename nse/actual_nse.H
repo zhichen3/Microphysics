@@ -456,7 +456,7 @@ void ase (T& state, T& nse_state){
   // f: characteritic scale for the burning limiter, ~0.05
   // cell_dx: size of simulation mesh, ~1.0e6
   // 
-  // assume we have f, dx
+  // assume we have f, cell_dx in _parameters
   
   // Update whether state is about in NSE in order to do ASE.
   ase_check(state, nse_state);
@@ -487,19 +487,23 @@ void ase (T& state, T& nse_state){
   
 #ifdef NEW_NETWORK_IMPLEMENTATION
   // rhs_t rhs_data(rate), rate is a string (enum to be indices);
+  // gives specie names, which can be used to determine reaction and find the corresponding rate
+
+  constexpr rhs_t data = RHS::rhs_data(rate)
+  // Real rhs_term<int species, int rate> (state, Real fr, Real rr), given species, rate, forward and reverse.
   
-  
-  RHS::rhs(state, ydot);
+  //RHS::rhs(state, ydot);
+  //actual_rhs(state, ydot);
 #else
   // Get rates, ydot,and energy generation rate, copy routine from  rhs_nuc(state, ydot)
   
-  // Find individual rates
+  // Find individual rates in rate_eval
   rate_t rate_eval;
   constexpr do_T_derivatives = 0;
   evaluate_rates<do_T_derivatives, rate_t>(state, rate_eval);
 
   // Find ydot
-  rhs_nuc(state, ydot, rate_eval.screened_rates);
+  rhs_nuc(state, ydot, Y, rate_eval.screened_rates);
 
   // Find energy generation rate
   amrex::Real enuc;
