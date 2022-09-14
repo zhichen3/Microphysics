@@ -41,7 +41,6 @@ void init_actual_nse(){
     }
   }
 
-
   // Check if network results in singular jacobian first, require at
   // least one nuclei that nuclei.Z != nuclei.N.  Some examples include
   // aprox13 and iso7
@@ -72,7 +71,7 @@ struct Newton_inputs{
 };
 
 template <typename T>
-void evaluate_u_c(const T& nse_state, amrex::Real& u_c[NumSpec])
+void evaluate_u_c(const T& state, amrex::Array1D<amrex::Real, 1, NumSpec>& u_c)
 {
   // This function finds the coulomb potential given a state
 
@@ -99,7 +98,7 @@ void evaluate_u_c(const T& nse_state, amrex::Real& u_c[NumSpec])
 
       // chemical potential for coulomb correction
 
-      u_c[n] = C::k_B * state.T / C::Legacy::MeV2erg *
+      u_c(n+1) = C::k_B * state.T / C::Legacy::MeV2erg *
           (A1 * (std::sqrt(gamma * (A2 + gamma)) -
                  A2 * std::log(std::sqrt(gamma / A2) +
                                std::sqrt(1.0_rt + gamma / A2))) +
@@ -109,7 +108,7 @@ void evaluate_u_c(const T& nse_state, amrex::Real& u_c[NumSpec])
 
 
 template <typename T>
-T get_nse_state(const T& state, const amrex::Real& u_c[NumSpec])
+T get_nse_state(const T& state, const amrex::Array1D<amrex::Real, 1, NumSpec>& u_c)
 {
   // This function finds the nse state given the burn state or eos state
 
@@ -133,7 +132,7 @@ T get_nse_state(const T& state, const amrex::Real& u_c[NumSpec])
 
       amrex::Real exponent = amrex::min(500.0_rt,
                                  (zion[n] * state.mu_p + (aion[n] - zion[n]) * state.mu_n
-                                  - u_c[n] + network::bion(n+1)) /
+                                  - u_c(n+1) + network::bion(n+1)) /
                                  C::k_B / state.T * C::Legacy::MeV2erg);
 
       nse_state.xn[n] = network::mion(n+1) * partition_function / state.rho *
@@ -146,20 +145,18 @@ T get_nse_state(const T& state, const amrex::Real& u_c[NumSpec])
   nse_state.T = state.T;
   nse_state.rho = state.rho;
   composition(nse_state);
-  
+
   return nse_state;
 }
 
 
 template <typename T>
-void nse_constraint(const T& state, Newton_inputs& nse_inputs, const amrex::Real& u_c[NumSpec]){
+void nse_constraint(const T& state, const T& nse_state, Newton_inputs& nse_inputs){
     // This functions finds the constraint equations and jacobian used
     // for calculating nse.
 
     // calculate the nse state based on initial conditions of mu_p and
     // mu_n which are chemical potential of proton and neutron
-  
-  auto nse_state = get_nse_state(state, u_c);
 
     // Now find constraint equations
 
@@ -196,8 +193,6 @@ void nse_constraint(const T& state, Newton_inputs& nse_inputs, const amrex::Real
         nse_inputs.jac(1,0) += nse_state.xn[n] * zion[n] * zion[n] * aion_inv[n] / C::k_B / state.T * C::Legacy::MeV2erg;
         nse_inputs.jac(1,1) += nse_state.xn[n] * zion[n] * (aion[n] - zion[n]) * aion_inv[n] / C::k_B / state.T * C::Legacy::MeV2erg;
     }
-
-    return nse_inputs;
 }
 
 
@@ -211,7 +206,10 @@ void fcn_hybrid(Array1D<Real, 1, 2>& x, Array1D<Real, 1, 2>& fvec,
     current_state.mu_p = x(1);
     current_state.mu_n = x(2);
 
-    auto nse_state = get_nse_state(current_state);
+    amrex::Array1D<amrex::Real, 1, NumSpec> u_c;
+    evaluate_u_c(current_state, u_c);
+    
+    auto nse_state = get_nse_state(current_state, u_c);
 
     nse_state.y_e = 0.0_rt;
 
@@ -242,7 +240,10 @@ void jcn_hybrid(Array1D<Real, 1, 2>& x, Array2D<Real, 1, 2, 1, 2>& fjac,
     current_state.mu_p = x(1);
     current_state.mu_n = x(2);
 
-    auto nse_state = get_nse_state(current_state);
+    amrex::Array1D<amrex::Real, 1, NumSpec> u_c;
+    evaluate_u_c(current_state, u_c);
+
+    auto nse_state = get_nse_state(current_state, u_c);
 
     // evaluate jacobian of the constraint
 
@@ -295,10 +296,12 @@ void nse_hybrid_solver(T& state, amrex::Real eps=1.0e-4_rt) {
 // A newton-raphson solver for finding nse state used for calibrating
 // chemical potential of proton and neutron
 template<typename T>
-void nse_nr_solver(T& state, amrex::Real& u_c[NumSpec], amrex::Real eps=1.0e-4_rt) {
+void nse_nr_solver(T& state, const amrex::Array1D<amrex::Real, 1, NumSpec>& u_c, amrex::Real eps=1.0e-4_rt) {
 
   bool converged = false;                                     // whether nse solver converged or not
 
+  // evaluate_u_c(state, u_c);
+  T nse_state;                                                // declare nse_state
   Newton_inputs f;                                            // store constraint eq and jacobian
   amrex::Real det;                                            // store determinant for finding inverse jac
   decltype(f.jac) inverse_jac;                                // store inverse jacobian
@@ -315,11 +318,12 @@ void nse_nr_solver(T& state, amrex::Real& u_c[NumSpec], amrex::Real eps=1.0e-4_r
       break;
     }
 
-    // Fill in constraint eq and jacobian
-    nse_constraint(state, f, u_c);
+    // Find nse_state and fill in constraint eq and jacobian using nse_state
+    nse_state = get_nse_state(state, u_c);
+    nse_constraint(state, nse_state, f);
     
     // Find the max of the jacobian used for scaling determinant to prevent digit overflow
-    auto scale_fac = amrex::max(f.jac(1,1),amrex::max(f.jac(1,0), amrex::max(f.jac(0,0), f.jac(0,1))));
+    auto scale_fac = amrex::max(f.jac(1,1), amrex::max(f.jac(1,0), amrex::max(f.jac(0,0), f.jac(0,1))));
 
     // if jacobians are small, then no need for scaling
     if (scale_fac < 1.0e150){
@@ -358,8 +362,8 @@ void nse_nr_solver(T& state, amrex::Real& u_c[NumSpec], amrex::Real eps=1.0e-4_r
       amrex::Error("Nan encountered, likely due to overflow in digits or not making good progress");
     }
 
-    // evaluate u_c
-    evaluate_u_c(state, u_c);
+    // update u_c using nse_state
+    // evaluate_u_c(nse_state, u_c);
   }
 
   if (!converged){
@@ -393,17 +397,51 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-4_rt, bool input_ye_is_val
     composition(state);
   }
 
-  // invoke solver
+  // iterate over molar fraction start with u_c = 0
+  amrex::Array1D<amrex::Real, 1, NumSpec> u_c;          
+  amrex::Real old_xn[NumSpec];
+  amrex::Real xnorm;
   
-  if (use_hybrid_solver){
-      nse_hybrid_solver(state, eps);
-  }
-  else{
-    nse_nr_solver(state, eps);
-  }  
+  // invoke solver
+  for (int i = 0; i < 20; ++i){
 
+    xnorm = 0.0_rt;
+    
+    if (use_hybrid_solver){
+      nse_hybrid_solver(state, eps);
+    }
+    else{
+      nse_nr_solver(state, u_c, eps);
+    }
+
+    for (int n = 0; n < NumSpec; ++n){
+        if (n == NSE_INDEX::p_index){
+            continue;
+        }      
+	xnorm += std::pow(state.xn[n] - old_xn[n], 2.0_rt);
+    }
+    
+    if (std::sqrt(xnorm) < 1.0e-12_rt){
+	break;
+    }
+
+    for (int n = 0; n < NumSpec; ++n){
+      if (n == NSE_INDEX::p_index){
+	continue;
+      }
+      old_xn[n] = state.xn[n];
+    }
+    
+    evaluate_u_c(state, u_c);
+    
+  }
   // get the nse_state
-  auto nse_state = get_nse_state(state);
+  
+
+  // evaluate_u_c(state, u_c);
+  
+  auto nse_state = get_nse_state(state, u_c);
+
   return nse_state;
 }
 
