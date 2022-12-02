@@ -232,8 +232,8 @@ There are 3 main criteria discussed in the :cite:`Kushnir_2020`.
   * 1 :math:`(\alpha, p)`, 1 :math:`(\gamma, p)`, 2 :math:`(\gamma, n)`
   * 1 :math:`(\alpha, n)`, 2 :math:`(\gamma, p)`, 1 :math:`(\gamma, n)`
 
-  In order to consider to be fast reaction cycle, we require every step in the cycle to
-  have :math:`Y_i/\textbf{min}(b_f, b_r) < \epsilon t_s` for all :math:`i = n, p, \alpha`
+  To consider to be fast reaction cycle, we require every step in the cycle to
+  have :math:`Y_i/\textbf{min}(b_f, b_r) < \epsilon t_s` for :math:`i = n, p, \alpha`
   participated in this step, where :math:`b_f` and :math:`b_r`
   are the forward and reverse rate of the reaction, :math:`\epsilon` is a tolerance which
   has a default value of :math:`0.1`, and :math:`t_s` is the sound crossing time of a
