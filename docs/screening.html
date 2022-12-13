@@ -17,6 +17,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -77,8 +78,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Screening of Reaction Rates</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Screening of Reaction Rates</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/screening.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -144,6 +145,10 @@ one-component plasma, while this version (2009) treats it fully as a
 multi-component plasma (which is significantly more expensive)</p>
 <p>This includes the portion in the appendix that blends in the weak
 screening limit.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">null</span></code> :</p>
+<p>This disables screening by always returning 1 for the screening
+enhancement factor.</p>
 </li>
 </ul>
 </section>

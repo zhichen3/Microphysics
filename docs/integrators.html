@@ -17,6 +17,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "macros": {"rhozero": "{\\rho_0}", "pizero": "{\\pi_0}", "pizeroone": "{\\pi_0^{(1)}}", "pizerotwo": "{\\pi_0^{(2)}}", "gammabar": "{\\overline{\\Gamma}_1}", "ptl": "{{\\partial}}", "eb": "{{\\bf e}}", "fb": "{{\\bf f}}", "ib": "{{\\bf i}}", "Ub": "{{\\bf U}}", "Vb": "{{\\bf V}}", "xb": "{{\\bf x}}", "ut": "{\\tilde{u}}", "vt": "{\\tilde{v}}", "wt": "{\\tilde{w}}", "Ubt": "{\\widetilde{\\Ub}}", "edge": "{\\rm EDGE}", "mac": "{\\rm MAC}", "trans": "{\\rm TRANS}", "nablab": "{\\mathbf{\\nabla}}", "cdotb": "{\\mathbf{\\cdot}}", "half": "{\\frac{1}{2}}", "myhalf": "{\\frac{1}{2}}", "nph": "{{n + \\myhalf}}", "nmh": "{{n - \\myhalf}}", "Hext": "{{H_{\\rm ext}}}", "Hnuc": "{{H_{\\rm nuc}}}", "kth": "{k_{\\rm th}}", "pred": "{{\\rm pred}}", "Sbar": "{\\overline{S}}", "inp": "{\\mathrm{in}}", "initp": "{\\mathrm{init}}", "outp": "{\\mathrm{out}}", "uadv": "{\\widetilde{\\mathbf{U}}^{\\mathrm{ADV}}}", "uadvone": "{\\widetilde{\\mathbf{U}}^{\\mathrm{ADV},\\star}}", "uadvonedag": "{\\Ubt^{\\mathrm{ADV},\\dagger,\\star}}", "uadvtwo": "{\\widetilde{\\mathbf{U}}^{\\mathrm{ADV}}}", "uadvtwodag": "{\\Ubt^{\\mathrm{ADV},\\dagger}}", "uadvsdcstar": "{\\mathbf{U}^{\\mathrm{ADV},\\star}}", "uadvsdcpred": "{\\mathbf{U}^{\\mathrm{ADV},\\mathrm{pred}}}", "uadvsdc": "{\\mathbf{U}^{\\mathrm{ADV}}}", "dt": "{\\Delta t}", "dr": "{\\Delta r}", "etarho": "{\\eta_{\\rho}}", "etarhoec": "{\\etarho^{\\rm ec}}", "etarhocc": "{\\etarho^{\\rm cc}}", "etarhoflux": "{\\etarho^{\\rm flux}}", "divetarho": "{\\nabla\\cdot(\\etarho\\eb_r)}", "ow": "{\\overline{w}_0}", "dw": "{\\delta w_0}", "thalf": "{\\sfrac{3}{2}}", "rhop": "{{\\rho^{\\prime}}}", "omegadot": "{\\dot{\\omega}}", "er": "{\\mathbf{e}_r}", "ex": "{\\mathbf{e}_x}", "ey": "{\\mathbf{e}_y}", "ez": "{\\mathbf{e}_z}", "Omegab": "{{\\bf \\Omega}}", "rb": "{{\\bf r}}", "isotm": ["{{}^{#2}\\mathrm{#1}}", 2], "edot": "{{{\\dot{e}_\\mathrm{nuc}}}}", "enuc": "{{{{e}_\\mathrm{nuc}}}}", "edotnu": "{{{\\dot{e}_\\nu}}}", "rt": "{\\tilde{r}_0}", "rhob": "{\\ensuremath{\\rho_\\mathrm{base}}}", "Tb": "{\\ensuremath{T_\\mathrm{base}}}", "gcc": "{\\mathrm{g~cm^{-3} }}", "pb": "{p_\\mathrm{base}}", "qburn": "{q_\\mathrm{burn}}", "Uc": "{{\\boldsymbol{\\mathcal{U}}}}", "Fb": "{\\mathbf{F}}", "Sc": "{\\mathbf{S}}", "Shydro": "{{{\\bf S}^{\\mathrm{hydro}}}}", "Rb": "{{\\bf R}}", "Rq": "{{\\bf R}}", "Adv": ["{{\\left [\\boldsymbol{\\mathcal{A}} \\left(#1\\right)\\right]}}", 1], "Advs": ["{{\\boldsymbol{\\mathcal{A}} \\left(#1\\right)}}", 1], "Sdot": "{\\dot{S}}"}}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -100,8 +101,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Integrating a Network</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Integrating a Network</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/integrators.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -184,7 +185,7 @@ appropriate Jacobian terms) by the specified constant amount.</p>
 <h3><code class="docutils literal notranslate"><span class="pre">burner</span></code><a class="headerlink" href="#burner" title="Permalink to this heading">¶</a></h3>
 <p>The main entry point for C++ is <code class="docutils literal notranslate"><span class="pre">burner()</span></code> in
 <code class="docutils literal notranslate"><span class="pre">interfaces/burner.H</span></code>.  This simply calls the <code class="docutils literal notranslate"><span class="pre">integrator()</span></code>
-routine (at the moment this can be <code class="docutils literal notranslate"><span class="pre">VODE</span></code> or <code class="docutils literal notranslate"><span class="pre">ForwardEuler</span></code>).</p>
+routine (at the moment this can be <code class="docutils literal notranslate"><span class="pre">VODE</span></code>, <code class="docutils literal notranslate"><span class="pre">BackwardEuler</span></code>, or <code class="docutils literal notranslate"><span class="pre">ForwardEuler</span></code>).</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">AMREX_GPU_HOST_DEVICE</span><span class="w"> </span><span class="n">AMREX_FORCE_INLINE</span><span class="w"></span>
 <span class="kt">void</span><span class="w"> </span><span class="n">burner</span><span class="w"> </span><span class="p">(</span><span class="n">burn_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">Real</span><span class="w"> </span><span class="n">dt</span><span class="p">)</span><span class="w"></span>
 </pre></div>
@@ -418,9 +419,18 @@ and <code class="docutils literal notranslate"><span class="pre">actual_jac</spa
 the <code class="docutils literal notranslate"><span class="pre">INTEGRATOR_DIR</span></code> variable in the makefile. Presently,
 the allowed options are:</p>
 <ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">BackwardEuler</span></code>: an implicit first-order accurate backward-Euler
+method.  An error estimate is done by taking 2 half steps and
+comparing to a single full step.  This error is then used to control
+the timestep by using the local truncation error scaling.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ForwardEuler</span></code>: an explicit first-order forward-Euler method.  This is
 meant for testing purposes only.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">VODE</span></code>: the VODE (<span id="id1">[<a class="reference internal" href="zreferences.html#id26" title="P. N. Brown, G. D. Byrne, and A. C. Hindmarsh. VODE: a variable coefficient ode solver. SIAM J. Sci. Stat. Comput., 10:1038-1051, 1989.">BBH89</a>]</span>) integration package.  We ported this
+<li><p><code class="docutils literal notranslate"><span class="pre">QSS</span></code>: the quasi-steady-state method of <span id="id1">[<a class="reference internal" href="zreferences.html#id37" title="David R. Mott, Elaine S. Oran, and Bram van Leer. A quasi-steady-state solver for the stiff ordinary differential equations of reaction kinetics. Journal of Computational Physics, 164(2):407-428, 2000. URL: https://www.sciencedirect.com/science/article/pii/S0021999100966051, doi:https://doi.org/10.1006/jcph.2000.6605.">MOvanLeer00</a>]</span> (see also
+<span id="id2">[<a class="reference internal" href="zreferences.html#id38" title="M W Guidry and J A Harris. Explicit integration of extremely stiff reaction networks: quasi-steady-state methods. Computational Science &amp; Discovery, 6(1):015002, jan 2013. URL: https://dx.doi.org/10.1088/1749-4699/6/1/015002, doi:10.1088/1749-4699/6/1/015002.">GH13</a>]</span>). This uses a second-order predictor-corrector method,
+and is designed specifically for handling coupled ODE systems for chemical
+and nuclear reactions. However, this integrator has difficulty near NSE,
+so we don’t recommend its use in production for nuclear astrophysics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VODE</span></code>: the VODE (<span id="id3">[<a class="reference internal" href="zreferences.html#id26" title="P. N. Brown, G. D. Byrne, and A. C. Hindmarsh. VODE: a variable coefficient ode solver. SIAM J. Sci. Stat. Comput., 10:1038-1051, 1989.">BBH89</a>]</span>) integration package.  We ported this
 integrator to C++ and removed the non-stiff integration code paths.</p></li>
 </ul>
 <p>We recommend that you use the VODE solver, as it is the most
@@ -435,7 +445,7 @@ never converge.  In these simulations, <code class="docutils literal notranslate
 relative tolerances and <code class="docutils literal notranslate"><span class="pre">atol</span></code> values will set the absolute tolerances
 for the ODE solver.  Often, one can find and set these values in an
 input file for a simulation.</p>
-<p><a class="reference internal" href="#fig-tolerances"><span class="std std-numref">Fig. 2</span></a> shows the results of a simple simulation using the
+<p><a class="reference internal" href="#fig-tolerances"><span class="std std-numref">Fig. 1</span></a> shows the results of a simple simulation using the
 burn_cell unit test to determine
 what tolerances are ideal for simulations.
 For this investigation, it was assumed that a run with a tolerance of <span class="math notranslate nohighlight">\(10^{-12}\)</span>
@@ -447,11 +457,11 @@ because their relative error values are fairly large.
 However, the test with a tolerance of <span class="math notranslate nohighlight">\(10^{-9}\)</span> is accurate
 and not so low that it takes incredible amounts of computer time,
 so <span class="math notranslate nohighlight">\(10^{-9}\)</span> should be used as the default tolerance in future simulations.</p>
-<figure class="align-default" id="id2">
+<figure class="align-default" id="id4">
 <span id="fig-tolerances"></span><a class="reference internal image-reference" href="_images/tolerances.png"><img alt="Relative error plot" src="_images/tolerances.png" style="width: 100%;" /></a>
 <figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Relative error of runs with varying tolerances as compared
-to a run with an ODE tolerance of <span class="math notranslate nohighlight">\(10^{-12}\)</span>.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Relative error of runs with varying tolerances as compared
+to a run with an ODE tolerance of <span class="math notranslate nohighlight">\(10^{-12}\)</span>.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>The integration tolerances for the burn are controlled by
