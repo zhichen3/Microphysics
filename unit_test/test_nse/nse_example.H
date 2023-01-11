@@ -7,7 +7,6 @@
 #include <iostream>
 #include <nse_solver.H>
 #include <react_util.H>
-#include <nse_check.H>
 
 void nse_example_c()
 {
