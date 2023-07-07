@@ -16,8 +16,8 @@ void init_tabular();
 // Table energy units are expected in terms of ergs
 
 // all tables are expected to have columns:
-// Log(rhoY) Log(T)  dQ     Vs      mu       e-cap-rate    nu-energy-loss  gamma-energy
-//                  (MeV)   (MeV)  (MeV)       (1/s)          (MeV/s)        (MeV/s)
+// rhoY     T   mu    dQ    Vs    e-cap-rate   nu-energy-loss  gamma-energy
+// g/cm^3   K   erg   erg   erg   1/s          erg/s           erg/s
 //
 
 const int num_tables = 4;
@@ -54,22 +54,22 @@ const int add_vars     = 1;  // 1 Additional Var in entries
 namespace rate_tables
 {
     extern AMREX_GPU_MANAGED table_t j_f20_o20_meta;
-    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6> j_f20_o20_data;
+    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6, Order::C> j_f20_o20_data;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 152> j_f20_o20_rhoy;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 39> j_f20_o20_temp;
 
     extern AMREX_GPU_MANAGED table_t j_ne20_f20_meta;
-    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6> j_ne20_f20_data;
+    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6, Order::C> j_ne20_f20_data;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 152> j_ne20_f20_rhoy;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 39> j_ne20_f20_temp;
 
     extern AMREX_GPU_MANAGED table_t j_o20_f20_meta;
-    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6> j_o20_f20_data;
+    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6, Order::C> j_o20_f20_data;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 152> j_o20_f20_rhoy;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 39> j_o20_f20_temp;
 
     extern AMREX_GPU_MANAGED table_t j_f20_ne20_meta;
-    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6> j_f20_ne20_data;
+    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6, Order::C> j_f20_ne20_data;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 152> j_f20_ne20_rhoy;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 39> j_f20_ne20_temp;
 

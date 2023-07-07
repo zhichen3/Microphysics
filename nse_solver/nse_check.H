@@ -184,8 +184,8 @@ void find_fast_reaction_cycle(const int current_nuc_ind, const amrex::Array1D<am
   int max_nucs;
   find_max_nucs(max_nucs, current_nuc_ind);
 
-  amrex::Array2D<int, 1, 6, 1, NumSpec+1> reactions;            // store possible reaction nuclei indices
-  amrex::Array2D<int, 1, 6, 1, NumSpec+1> fast_reactions;       // store indices of fast reaction nucs
+  amrex::Array2D<int, 1, 6, 1, NumSpec+1, Order::C> reactions;            // store possible reaction nuclei indices
+  amrex::Array2D<int, 1, 6, 1, NumSpec+1, Order::C> fast_reactions;       // store indices of fast reaction nucs
 
   // some variables to hold temporary data
 

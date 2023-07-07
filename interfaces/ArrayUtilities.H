@@ -62,31 +62,31 @@ namespace ArrayUtil
         AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
         void set (const int i, const int j, const Real x) noexcept {
             AMREX_ASSERT(i >= XLO && i <= XHI && j >= YLO && j <= YHI);
-            arr[i+j*(XHI-XLO+1)-(YLO*(XHI-XLO+1)+XLO)] = x;
+            arr[j+i*(YHI-YLO+1)-(XLO*(YHI-YLO+1)+YLO)] = x;
         }
 
         AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
         void add (const int i, const int j, const Real x) noexcept {
             AMREX_ASSERT(i >= XLO && i <= XHI && j >= YLO && j <= YHI);
-            arr[i+j*(XHI-XLO+1)-(YLO*(XHI-XLO+1)+XLO)] += x;
+            arr[j+i*(YHI-YLO+1)-(XLO*(YHI-YLO+1)+YLO)] += x;
         }
 
         AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
         void mul (const int i, const int j, const Real x) noexcept {
             AMREX_ASSERT(i >= XLO && i <= XHI && j >= YLO && j <= YHI);
-            arr[i+j*(XHI-XLO+1)-(YLO*(XHI-XLO+1)+XLO)] *= x;
+            arr[j+i*(YHI-YLO+1)-(XLO*(YHI-YLO+1)+YLO)] *= x;
         }
 
         [[nodiscard]] AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
         Real get (const int i, const int j) const noexcept {
             AMREX_ASSERT(i >= XLO && i <= XHI && j >= YLO && j <= YHI);
-            return arr[i+j*(XHI-XLO+1)-(YLO*(XHI-XLO+1)+XLO)];
+            return arr[j+i*(YHI-YLO+1)-(XLO*(YHI-YLO+1)+YLO)];
         }
 
         AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
         void add_identity () noexcept {
-            for (int i = XLO; i <= XHI; ++i) {
-                arr[i+i*(XHI-XLO+1)-(YLO*(XHI-XLO+1)+XLO)] += 1.0_rt;
+            for (int j = YLO; j <= YHI; ++j) {
+                arr[j+j*(YHI-YLO+1)-(XLO*(YHI-YLO+1)+YLO)] += 1.0_rt;
             }
         }
 
@@ -100,13 +100,13 @@ namespace ArrayUtil
         AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
         const Real& operator() (int i, int j) const noexcept {
             AMREX_ASSERT(i >= XLO && i <= XHI && j >= YLO && j <= YHI);
-            return arr[i+j*(XHI-XLO+1)-(YLO*(XHI-XLO+1)+XLO)];
+            return arr[j+i*(YHI-YLO+1)-(XLO*(YHI-YLO+1)+YLO)];
         }
 
         AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
         Real& operator() (int i, int j) noexcept {
             AMREX_ASSERT(i >= XLO && i <= XHI && j >= YLO && j <= YHI);
-            return arr[i+j*(XHI-XLO+1)-(YLO*(XHI-XLO+1)+XLO)];
+            return arr[j+i*(YHI-YLO+1)-(XLO*(YHI-YLO+1)+YLO)];
         }
 
         Real arr[(XHI-XLO+1)*(YHI-YLO+1)];

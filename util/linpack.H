@@ -10,7 +10,7 @@ template <int num_eqs>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void dgesl (RArray2D& a1, IArray1D& pivot1, RArray1D& b1)
 {
-    auto const& a = reinterpret_cast<Array2D<Real, 0, num_eqs-1, 0, num_eqs-1>&>(a1);
+    auto const& a = reinterpret_cast<Array2D<Real, 0, num_eqs-1, 0, num_eqs-1, Order::C>&>(a1);
     auto const& pivot = reinterpret_cast<Array1D<short, 0, num_eqs-1>&>(pivot1);
     auto& b = reinterpret_cast<Array1D<Real, 0, num_eqs-1>&>(b1);
 
@@ -52,7 +52,7 @@ template <int num_eqs>
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void dgefa (RArray2D& a1, IArray1D& pivot1, int& info)
 {
-    auto& a = reinterpret_cast<Array2D<Real, 0, num_eqs-1, 0, num_eqs-1>&>(a1);
+  auto& a = reinterpret_cast<Array2D<Real, 0, num_eqs-1, 0, num_eqs-1, Order::C>&>(a1);
     auto& pivot = reinterpret_cast<Array1D<short, 0, num_eqs-1>&>(pivot1);
 
     // dgefa factors a matrix by gaussian elimination.

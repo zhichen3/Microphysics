@@ -157,7 +157,7 @@ struct dvode_t
 #endif
 
     // the Nordsieck history array
-    amrex::Array2D<Real, 1, int_neqs, 1, VODE_LMAX> yh;
+    amrex::Array2D<Real, 1, int_neqs, 1, VODE_LMAX, Order::C> yh;
 
     Array1D<Real, 1, int_neqs> ewt, savf;
 

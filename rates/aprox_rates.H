@@ -2032,7 +2032,7 @@ void langanke(const Real btemp, const Real bden,
     const Real tfac2 = tfm*tf0*tf1*tfd2(jp);
 
     Array1D<Real, 1, 2> rnt;
-    Array2D<Real, 1, 2, 1, 14> rne;
+    Array2D<Real, 1, 2, 1, 14, Order::C> rne;
 
     // evaluate the spline fits
     for (auto jr = 1; jr <= 2; ++jr) {

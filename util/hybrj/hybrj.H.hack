@@ -16,7 +16,7 @@ void hybrj(hybrj_t<neqs>& hj,
                               amrex::Array1D<Real, 1, neqs>&,
                               int&)> fcn,
            std::function<void(amrex::Array1D<Real, 1, neqs>&,
-                              amrex::Array2D<Real, 1, neqs, 1, neqs>&,
+                              amrex::Array2D<Real, 1, neqs, 1, neqs, Order::C>&,
                               int&)> jcn) {
 
     // the purpose of hybrj is to find a zero of a system of
@@ -28,7 +28,7 @@ void hybrj(hybrj_t<neqs>& hj,
     // calculates the functions and the jacobian.
     //
     // void fcn(Array1D<Real, 1, neqs>& x, Array1D<Real, 1, neqs>& fvec, int& iflag)
-    // void jcn(Array1D<Real, 1, neqs>& x, Array2D<Real, 1, neqs, 1, neqs> fjac, int& iflag)
+    // void jcn(Array1D<Real, 1, neqs>& x, Array2D<Real, 1, neqs, 1, neqs, Order::C> fjac, int& iflag)
     //
     // the value of iflag should not be changed by fcn unless
     // the user wants to terminate execution of hybrj.

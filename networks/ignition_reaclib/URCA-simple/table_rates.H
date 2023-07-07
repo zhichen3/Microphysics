@@ -16,8 +16,8 @@ void init_tabular();
 // Table energy units are expected in terms of ergs
 
 // all tables are expected to have columns:
-// Log(rhoY) Log(T)  dQ     Vs      mu       e-cap-rate    nu-energy-loss  gamma-energy
-//                  (MeV)   (MeV)  (MeV)       (1/s)          (MeV/s)        (MeV/s)
+// rhoY     T   mu    dQ    Vs    e-cap-rate   nu-energy-loss  gamma-energy
+// g/cm^3   K   erg   erg   erg   1/s          erg/s           erg/s
 //
 
 const int num_tables = 2;
@@ -54,12 +54,12 @@ const int add_vars     = 1;  // 1 Additional Var in entries
 namespace rate_tables
 {
     extern AMREX_GPU_MANAGED table_t j_na23_ne23_meta;
-    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6> j_na23_ne23_data;
+    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6, Order::C> j_na23_ne23_data;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 152> j_na23_ne23_rhoy;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 39> j_na23_ne23_temp;
 
     extern AMREX_GPU_MANAGED table_t j_ne23_na23_meta;
-    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6> j_ne23_na23_data;
+    extern AMREX_GPU_MANAGED Array3D<Real, 1, 39, 1, 152, 1, 6, Order::C> j_ne23_na23_data;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 152> j_ne23_na23_rhoy;
     extern AMREX_GPU_MANAGED Array1D<Real, 1, 39> j_ne23_na23_temp;
 

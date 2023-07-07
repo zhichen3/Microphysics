@@ -18,7 +18,7 @@
 
 template<int neqs>
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-void r1mpyq(amrex::Array2D<Real, 1, neqs, 1, neqs>& a,
+void r1mpyq(amrex::Array2D<Real, 1, neqs, 1, neqs, Order::C>& a,
             amrex::Array1D<Real, 1, neqs>& v,
             amrex::Array1D<Real, 1, neqs>& w) {
 

@@ -26,8 +26,8 @@ namespace RHS
 {
 
 // Rate tabulation data.
-extern AMREX_GPU_MANAGED Array3D<Real, 1, Rates::NumRates, 1, 2, 1, nrattab> rattab;
-extern AMREX_GPU_MANAGED Array3D<Real, 1, Rates::NumRates, 1, 2, 1, nrattab> drattabdt;
+extern AMREX_GPU_MANAGED Array3D<Real, 1, Rates::NumRates, 1, 2, 1, nrattab, Order::C> rattab;
+extern AMREX_GPU_MANAGED Array3D<Real, 1, Rates::NumRates, 1, 2, 1, nrattab, Order::C> drattabdt;
 
 // Calculate an integer factorial.
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
@@ -304,7 +304,7 @@ typedef ArrayUtil::MathArray2D<1, INT_NEQS, 1, INT_NEQS> RArray2D;
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
 void dgesl (RArray2D& a1, RArray1D& b1)
 {
-    auto const& a = reinterpret_cast<Array2D<Real, 0, INT_NEQS-1, 0, INT_NEQS-1>&>(a1);
+    auto const& a = reinterpret_cast<Array2D<Real, 0, INT_NEQS-1, 0, INT_NEQS-1, Order::C>&>(a1);
     auto& b = reinterpret_cast<Array1D<Real, 0, INT_NEQS-1>&>(b1);
 
     // solve a * x = b
@@ -344,7 +344,7 @@ void dgesl (RArray2D& a1, RArray1D& b1)
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
 void dgefa (RArray2D& a1)
 {
-    auto& a = reinterpret_cast<Array2D<Real, 0, INT_NEQS-1, 0, INT_NEQS-1>&>(a1);
+    auto& a = reinterpret_cast<Array2D<Real, 0, INT_NEQS-1, 0, INT_NEQS-1, Order::C>&>(a1);
 
     // LU factorization in-place without pivoting.
 

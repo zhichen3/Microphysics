@@ -46,7 +46,7 @@ struct hybrj_t {
     // fjac is an output n by n array which contains the
     // orthogonal matrix q produced by the qr factorization
     // of the final approximate jacobian.
-    amrex::Array2D<Real, 1, neqs, 1, neqs> fjac;
+    amrex::Array2D<Real, 1, neqs, 1, neqs, Order::C> fjac;
 
     // xtol is a nonnegative input variable. termination
     // occurs when the relative error between two consecutive

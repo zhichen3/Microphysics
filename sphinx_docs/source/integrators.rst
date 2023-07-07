@@ -214,7 +214,7 @@ form:
 
 .. code-block:: c++
 
-   void actual_jac(burn_t& state, MathArray2D<1, neqs, 1, neqs>& jac)
+   void actual_jac(burn_t& state, MathArray2D<1, neqs, 1, neqs, Order::C>& jac)
 
 The Jacobian matrix elements are stored in ``jac`` as:
 

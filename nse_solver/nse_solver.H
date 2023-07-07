@@ -371,7 +371,7 @@ void fcn(Array1D<Real, 1, 2>& x, Array1D<Real, 1, 2>& fvec,
 
 template<typename T>
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-void jcn(Array1D<Real, 1, 2>& x, Array2D<Real, 1, 2, 1, 2>& fjac,
+void jcn(Array1D<Real, 1, 2>& x, Array2D<Real, 1, 2, 1, 2, Order::C>& fjac,
                 const T& state, int& iflag) {
 
     T current_state = state;
@@ -506,7 +506,7 @@ void nse_nr_solver(T& state, amrex::Real eps=1.0e-10_rt) {
   bool converged = false;                                     // whether nse solver converged or not
 
   amrex::Array1D<amrex::Real, 1, 2> f;
-  amrex::Array2D<amrex::Real, 1, 2, 1, 2> jac;
+  amrex::Array2D<amrex::Real, 1, 2, 1, 2, Order::C> jac;
   amrex::Array1D<amrex::Real, 1, 2> x;
   int flag = 0;
 
@@ -517,7 +517,7 @@ void nse_nr_solver(T& state, amrex::Real eps=1.0e-10_rt) {
   fcn(x, f, state,flag);
 
   amrex::Real det;                                            // store determinant for finding inverse jac
-  amrex::Array2D<amrex::Real, 1, 2, 1, 2> inverse_jac;        // store inverse jacobian
+  amrex::Array2D<amrex::Real, 1, 2, 1, 2, Order::C> inverse_jac;        // store inverse jacobian
   amrex::Real d_mu_p = std::numeric_limits<Real>::max();      // difference in chemical potential of proton
   amrex::Real d_mu_n = std::numeric_limits<Real>::max();      // difference in chemical potential of neutron
 

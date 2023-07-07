@@ -19,7 +19,7 @@ void fcn(Array1D<Real, 1, neqs>& x, Array1D<Real, 1, neqs>& fvec, const T& data,
 }
 
 template<int neqs, typename T>
-void jcn(Array1D<Real, 1, neqs>& x, Array2D<Real, 1, neqs, 1, neqs>& fjac, const T& data, int& iflag) {
+void jcn(Array1D<Real, 1, neqs>& x, Array2D<Real, 1, neqs, 1, neqs, Order::C>& fjac, const T& data, int& iflag) {
 
     for (int k = 1; k <= neqs; ++k) {
         for (int j = 1; j <= neqs; ++j) {

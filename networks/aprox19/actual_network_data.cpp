@@ -18,7 +18,7 @@ namespace table
   AMREX_GPU_MANAGED amrex::Array1D<amrex::Real, 1, npts> ebtab;
   AMREX_GPU_MANAGED amrex::Array1D<amrex::Real, 1, npts> wratetab;
 
-  AMREX_GPU_MANAGED amrex::Array2D<amrex::Real, 1, NumSpec, 1, npts> massfractab;
+  AMREX_GPU_MANAGED amrex::Array2D<amrex::Real, 1, NumSpec, 1, npts, Order::C> massfractab;
 
 }
 #endif

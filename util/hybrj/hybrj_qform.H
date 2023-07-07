@@ -15,7 +15,7 @@
 
 template<int neqs>
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-void qform(amrex::Array2D<Real, 1, neqs, 1, neqs>& q,
+void qform(amrex::Array2D<Real, 1, neqs, 1, neqs, Order::C>& q,
            amrex::Array1D<Real, 1, neqs>& wa) {
 
     // q is an n by n array. on input the full lower trapezoid in

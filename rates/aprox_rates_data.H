@@ -8,7 +8,7 @@
 
 extern AMREX_GPU_MANAGED amrex::Array1D<amrex::Real,1,6> rv;
 extern AMREX_GPU_MANAGED amrex::Array1D<amrex::Real,1,14> tv;
-extern AMREX_GPU_MANAGED amrex::Array3D<amrex::Real,1,2,1,6,1,14> datn;
+extern AMREX_GPU_MANAGED amrex::Array3D<amrex::Real,1,2,1,6,1,14,Order::C> datn;
 extern AMREX_GPU_MANAGED amrex::Array1D<amrex::Real,1,4> rfdm;
 extern AMREX_GPU_MANAGED amrex::Array1D<amrex::Real,1,4> rfd0;
 extern AMREX_GPU_MANAGED amrex::Array1D<amrex::Real,1,4> rfd1;
