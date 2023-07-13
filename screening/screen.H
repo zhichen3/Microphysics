@@ -847,10 +847,11 @@ void chabrier1998 (const plasma_state_t& state,
   }
   // Fitted parameters, see Chabrier & Potekhin 1998 Sec.IV
   
-  const Real A_1 = -0.9052_rt;
-  const Real A_2 = 0.6322_rt;
-  const Real A_3 = -0.5_rt * std::sqrt(3.0_rt) - A_1 / std::sqrt(A_2);
-    
+  constexpr Real A_1 = -0.9052_rt;
+  constexpr Real A_2 = 0.6322_rt;
+  // constexpr Real A_3 = -0.5_rt * std::sqrt(3.0_rt) - A_1 / std::sqrt(A_2);
+  constexpr Real A_3 = 0.272433346667;
+
   // Helmholtz free energy, See Chabrier & Potekhin 1998 Eq. 28
 
   Real f1 = A_1 * (std::sqrt(Gamma1 * (A_2 + Gamma1)) -
@@ -923,23 +924,29 @@ void chabrier1998 (const plasma_state_t& state,
 
   // Quantum correction terms (same as screen5)
   //see Calder 2007 Eq.A8 and Alastuey1978, Eq. 24 and 31
+
+  Real b_fac2 = b_fac * b_fac;
+  Real b_fac3 = b_fac3 * b_fac;
+  Real b_fac4 = b_fac3 * b_fac;
+  Real b_fac5 = b_fac4 * b_fac;
+  Real b_fac6 = b_fac5 * b_fac;
   
-  Real quantum_corr_1 = -tau12 * (5.0_rt/32.0_rt * std::pow(b_fac, 3) - 0.014_rt * std::pow(b_fac, 4)
-				  - 0.128_rt * std::pow(b_fac, 5));
+  Real quantum_corr_1 = -tau12 * (5.0_rt/32.0_rt * b_fac3 - 0.014_rt * b_fac4
+				  - 0.128_rt * b_fac5);
   
-  Real quantum_corr_2 = -Gamma_eff * (0.0055_rt * std::pow(b_fac, 4) - 0.0098_rt * std::pow(b_fac, 5)
-				      + 0.0048_rt * std::pow(b_fac, 6));
+  Real quantum_corr_2 = -Gamma_eff * (0.0055_rt * b_fac4 - 0.0098_rt * b_fac5
+				      + 0.0048_rt * b_fac6);
 
   [[maybe_unused]] Real quantum_corr_1_dT;
   [[maybe_unused]] Real quantum_corr_2_dT;
   if constexpr (do_T_derivatives) {
     quantum_corr_1_dT = tau12dT / tau12 * quantum_corr_1 - tau12 * b_fac_dT
-      * (15.0_rt/32.0_rt * std::pow(b_fac, 2) - 0.014_rt * 4.0_rt * std::pow(b_fac, 3)
-	 - 0.128_rt * 5.0_rt * std::pow(b_fac, 4));
+      * (15.0_rt/32.0_rt * b_fac2 - 0.014_rt * 4.0_rt * b_fac3
+	 - 0.128_rt * 5.0_rt * b_fac4);
 
     quantum_corr_2_dT = Gamma_eff_dT / Gamma_eff * quantum_corr_2 - Gamma_eff * b_fac_dT
-      * (0.0055_rt * 4.0_rt * std::pow(b_fac, 3) - 0.0098_rt * 5.0_rt
-	 * std::pow(b_fac, 4) + 0.0048_rt * 6.0_rt * std::pow(b_fac, 5));
+      * (0.0055_rt * 4.0_rt * b_fac3 - 0.0098_rt * 5.0_rt
+	 * b_fac4 + 0.0048_rt * 6.0_rt * b_fac5);
   }
   
   // See Calder2007 Appendix Eq. A8.
