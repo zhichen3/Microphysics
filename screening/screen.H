@@ -851,42 +851,46 @@ void chabrier1998 (const plasma_state_t& state,
   constexpr Real A_2 = 0.6322_rt;
   // constexpr Real A_3 = -0.5_rt * std::sqrt(3.0_rt) - A_1 / std::sqrt(A_2);
   constexpr Real A_3 = 0.272433346667;
-
+  constexpr Real sqrtA2_inv = 1.25768752812;
   // Helmholtz free energy, See Chabrier & Potekhin 1998 Eq. 28
 
-  Real f1 = A_1 * (std::sqrt(Gamma1 * (A_2 + Gamma1)) -
-		   A_2 * std::log(std::sqrt(Gamma1/A_2) + std::sqrt(1.0_rt + Gamma1/A_2)))
-    + 2.0_rt * A_3 * (std::sqrt(Gamma1) - std::atan(std::sqrt(Gamma1)));
+  Real sqrtGamma1 = std::sqrt(Gamma1);
+  Real sqrtGamma2 = std::sqrt(Gamma2);
+  Real sqrtGamma12 = std::sqrt(Gamma12);
   
-  Real f2 = A_1 * (std::sqrt(Gamma2 * (A_2 + Gamma2)) -
-		   A_2 * std::log(std::sqrt(Gamma2/A_2) + std::sqrt(1.0_rt + Gamma2/A_2)))
-    + 2.0_rt * A_3 * (std::sqrt(Gamma2) - std::atan(std::sqrt(Gamma2)));
+  Real f1 = A_1 * (sqrtGamma1 * std::sqrt(A_2 + Gamma1) -
+		   A_2 * std::log(sqrtGamma1 * sqrtA2_inv + std::sqrt(1.0_rt + Gamma1/A_2)))
+    + 2.0_rt * A_3 * (sqrtGamma1 - std::atan(sqrtGamma1));
   
-  Real f12 = A_1 * (std::sqrt(Gamma12 * (A_2 + Gamma12)) -
-		   A_2 * std::log(std::sqrt(Gamma12/A_2) + std::sqrt(1.0_rt + Gamma12/A_2)))
-    + 2.0_rt * A_3 * (std::sqrt(Gamma12) - std::atan(std::sqrt(Gamma12)));
+  Real f2 = A_1 * (sqrtGamma2 * std::sqrt(A_2 + Gamma2) -
+		   A_2 * std::log(sqrtGamma2 * sqrtA2_inv + std::sqrt(1.0_rt + Gamma2/A_2)))
+    + 2.0_rt * A_3 * (sqrtGamma2 - std::atan(sqrtGamma2));
+  
+  Real f12 = A_1 * (sqrtGamma12 * std::sqrt(A_2 + Gamma12) -
+		   A_2 * std::log(sqrtGamma12 * sqrtA2_inv + std::sqrt(1.0_rt + Gamma12/A_2)))
+    + 2.0_rt * A_3 * (sqrtGamma12 - std::atan(sqrtGamma12));
 
   [[maybe_unused]] Real f1dT, f2dT, f12dT;
   
   if constexpr (do_T_derivatives) {
-    f1dT = A_1 * ((A_2 + 2.0_rt * Gamma1) / (2.0_rt * std::sqrt(Gamma1 * (A_2 + Gamma1)))
-		       - 0.5_rt / (std::sqrt(Gamma1 / A_2) + std::sqrt(1.0_rt + Gamma1 / A_2))
-		       * (1.0_rt / std::sqrt(Gamma1 / A_2) + 1.0_rt / std::sqrt(1.0_rt + Gamma1 / A_2)))
-      + A_3 / std::sqrt(Gamma1) * (1.0_rt - 1.0_rt / (1.0_rt + Gamma1));
+    f1dT = A_1 * ((A_2 + 2.0_rt * Gamma1) / (2.0_rt * sqrtGamma1 * std::sqrt(A_2 + Gamma1))
+		       - 0.5_rt / (sqrtGamma1 * sqrtA2_inv + std::sqrt(1.0_rt + Gamma1 / A_2))
+		       * (1.0_rt / (sqrtGamma1 * sqrtA2_inv) + 1.0_rt / std::sqrt(1.0_rt + Gamma1 / A_2)))
+      + A_3 / sqrtGamma1 * (1.0_rt - 1.0_rt / (1.0_rt + Gamma1));
 
     f1dT *= Gamma1dT;
 
-    f2dT = A_1 * ((A_2 + 2.0_rt * Gamma2) / (2.0_rt * std::sqrt(Gamma2 * (A_2 + Gamma2)))
-		       - 0.5_rt / (std::sqrt(Gamma2 / A_2) + std::sqrt(1.0_rt + Gamma2 / A_2))
-		       * (1.0_rt / std::sqrt(Gamma2 / A_2) + 1.0_rt / std::sqrt(1.0_rt + Gamma2 / A_2)))
-      + A_3 / std::sqrt(Gamma2) * (1.0_rt - 1.0_rt / (1.0_rt + Gamma2));
+    f2dT = A_1 * ((A_2 + 2.0_rt * Gamma2) / (2.0_rt * sqrtGamma2 * std::sqrt(A_2 + Gamma2))
+		       - 0.5_rt / (sqrtGamma2 * sqrtA2_inv + std::sqrt(1.0_rt + Gamma2 / A_2))
+		       * (1.0_rt / (sqrtGamma2 * sqrtA2_inv) + 1.0_rt / std::sqrt(1.0_rt + Gamma2 / A_2)))
+      + A_3 / sqrtGamma2 * (1.0_rt - 1.0_rt / (1.0_rt + Gamma2));
 
     f2dT *= Gamma2dT;
 
-    f12dT = A_1 * ((A_2 + 2.0_rt * Gamma12) / (2.0_rt * std::sqrt(Gamma12 * (A_2 + Gamma12)))
-		       - 0.5_rt / (std::sqrt(Gamma12 / A_2) + std::sqrt(1.0_rt + Gamma12 / A_2))
-		       * (1.0_rt / std::sqrt(Gamma12 / A_2) + 1.0_rt / std::sqrt(1.0_rt + Gamma12 / A_2)))
-      + A_3 / std::sqrt(Gamma12) * (1.0_rt - 1.0_rt / (1.0_rt + Gamma12));
+    f12dT = A_1 * ((A_2 + 2.0_rt * Gamma12) / (2.0_rt * sqrtGamma12 * std::sqrt(A_2 + Gamma12))
+		       - 0.5_rt / (sqrtGamma12 * sqrtA2_inv + std::sqrt(1.0_rt + Gamma12 / A_2))
+		       * (1.0_rt / (sqrtGamma12 * sqrtA2_inv) + 1.0_rt / std::sqrt(1.0_rt + Gamma12 / A_2)))
+      + A_3 / sqrtGamma12 * (1.0_rt - 1.0_rt / (1.0_rt + Gamma12));
 
     f12dT *= Gamma12dT;
   }
@@ -896,8 +900,10 @@ void chabrier1998 (const plasma_state_t& state,
   // which is implemented in the strong screening limit of our screen5 routine.
 
   // See Wallace1982, Eq. A13
-  
-  Real Gamma_eff = std::cbrt(2.0_rt) * scn_fac.z1 * scn_fac.z2 * scn_fac.zs13inv * Gamma_e;
+  // cbrt(2.0) = 1.25992104989
+
+  constexpr cbrt2 = 1.25992104989;
+  Real Gamma_eff =  cbrt2 * scn_fac.z1 * scn_fac.z2 * scn_fac.zs13inv * Gamma_e;
   [[maybe_unused]] Real Gamma_eff_dT;
 
   if constexpr (do_T_derivatives) {
