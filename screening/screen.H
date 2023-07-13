@@ -902,7 +902,7 @@ void chabrier1998 (const plasma_state_t& state,
   // See Wallace1982, Eq. A13
   // cbrt(2.0) = 1.25992104989
 
-  constexpr cbrt2 = 1.25992104989;
+  constexpr Real cbrt2 = 1.25992104989;
   Real Gamma_eff =  cbrt2 * scn_fac.z1 * scn_fac.z2 * scn_fac.zs13inv * Gamma_e;
   [[maybe_unused]] Real Gamma_eff_dT;
 
