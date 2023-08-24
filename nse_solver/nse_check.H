@@ -25,17 +25,33 @@ void check_nse_molar(burn_t& state, const burn_t& nse_state, bool& nse_check) {
   // This function gives the first estimate whether we're in the nse or not
   // it checks whether the molar fractions of n,p,a are approximately in NSE
 
-  amrex::Real r = 1.0_rt;
-  amrex::Real r_nse = 1.0_rt;
-
   nse_check = false;
+
+  amrex::Real r = 0.0_rt;
 
   // raise error if no proton or helium-4 in the network.
 
   if (NSE_INDEX::h1_index == -1 || NSE_INDEX::he4_index == -1) {
     amrex::Error("Need proton and helium-4 in the network for NSE_NET to work");
   }
+
+  // Use a more strict constraint If we used a simple temperature threshold
   
+  if (T_nse_net > 0.0_rt) {
+    for (int n = 0; n < NumSpec; ++n) {
+      r += std::abs(state.xn[n] - nse_state.xn[n]) / nse_state.xn[n];
+    }
+    r /= static_cast<amrex::Real>(NumSpec);
+
+    if (r < 0.01_rt) {
+      nse_check = true;
+    }
+    return;
+  }
+  
+  r = 1.0_rt;
+  amrex::Real r_nse = 1.0_rt;
+
   // If there are proton, or helium in the network
 
   // Check if n,p,a are in equilibrium
@@ -302,7 +318,6 @@ void find_fast_reaction_cycle(const int current_nuc_ind, const amrex::Array1D<am
 
     if (!have_required_nucs) {
       found_fast_reaction_cycle = false;
-
       return;
     }
   }
