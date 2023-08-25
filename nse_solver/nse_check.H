@@ -39,11 +39,13 @@ void check_nse_molar(burn_t& state, const burn_t& nse_state, bool& nse_check) {
   
   if (T_nse_net > 0.0_rt) {
     for (int n = 0; n < NumSpec; ++n) {
-      r += std::abs(state.xn[n] - nse_state.xn[n]) / nse_state.xn[n];
+      r += (state.xn[n] - nse_state.xn[n]) * (state.xn[n] - nse_state.xn[n])
+	  / nse_state.xn[n] / nse_state.xn[n];
     }
     r /= static_cast<amrex::Real>(NumSpec);
+    r = std::sqrt(r);
 
-    if (r < 0.01_rt) {
+    if (r < 0.005_rt) {
       nse_check = true;
     }
     return;
