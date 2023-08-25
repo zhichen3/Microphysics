@@ -45,7 +45,7 @@ void check_nse_molar(burn_t& state, const burn_t& nse_state, bool& nse_check) {
     r /= static_cast<amrex::Real>(NumSpec);
     r = std::sqrt(r);
 
-    if (r < 0.005_rt) {
+    if (r < 1.0e-4_rt) {
       nse_check = true;
     }
     return;
