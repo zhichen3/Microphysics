@@ -101,7 +101,9 @@ void actual_integrator (BurnT& state, Real dt)
     set_aux_comp_from_X(state);
 #endif
 
-    eos(eos_input_re, state);
+    if (call_eos_in_rhs) {
+        eos(eos_input_re, state);
+    }
 
 #endif
 
