@@ -309,9 +309,10 @@ void sdc_nse_burn(BurnT& state, const amrex::Real dt) {
 /// they are the sources at time t0+dt
 ///
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-void nse_derivs(const amrex::Real rho0, const amrex::Real rhoe0,
-                const amrex::Real Ye0, const amrex::Real dt,
+void nse_derivs(const amrex::Real& Xn0 [NumSpec], const amrex::Real rho0,
+                const amrex::Real rhoe0, const amrex::Real Ye0,
                 const amrex::Real mu_p, const amrex::Real mu_n,
+                const amrex::Real dt,
                 const amrex::Real *ydot_a, amrex::Real& dyedt,
                 amrex::Real& drhoedt, const amrex::Real T_fixed) {
 
@@ -324,6 +325,10 @@ void nse_derivs(const amrex::Real rho0, const amrex::Real rhoe0,
     burn_state.mu_p = mu_p;
     burn_state.mu_n = mu_n;
 
+    for (int n = 0; n < NumSpec; ++n) {
+        burn_state.xn[n] = Xn0[n];
+    }
+
     // Get updated temperature
 
     if (T_fixed > 0) {
@@ -335,11 +340,9 @@ void nse_derivs(const amrex::Real rho0, const amrex::Real rhoe0,
 
     // Find NSE state at t0
 
-    burn_state.y_e = Ye0;
-
     amrex::Real eps = 1.0e-10_rt;
     bool input_ye_is_valid = true;
-    auto nse_state0 = get_actual_nse_state(burn_state, eps, input_ye_is_valid);
+    // auto nse_state0 = get_actual_nse_state(burn_state, eps, input_ye_is_valid);
 
     // compute the plasma neutrino losses at t0
 
@@ -432,6 +435,8 @@ void nse_derivs(const amrex::Real rho0, const amrex::Real rhoe0,
 
     // call NSE at t0 + tau
 
+    // assign new ye
+
     burn_state.y_e = Ye1;
 
     // Note this new NSE state has the contribution from advection
@@ -445,7 +450,7 @@ void nse_derivs(const amrex::Real rho0, const amrex::Real rhoe0,
     drhoedt = 0.0_rt;
     for (int n = 0; n < NumSpec; ++n) {
         drhoedt += (rho1 * nse_state1.xn[n] - tau * ydot_a[SFS+n] -
-                    rho0 * nse_state0.xn[n]) * aion_inv[n] * network::mion(n+1) / tau;
+                    rho0 * Xn0[n]) * aion_inv[n] * network::mion(n+1) / tau;
     }
     drhoedt *= C::Legacy::enuc_conv2;
 
@@ -453,10 +458,12 @@ void nse_derivs(const amrex::Real rho0, const amrex::Real rhoe0,
 
     // include neutrino terms again
 
-    drhoedt -= rho0 * snu;
-    if (integrator_rp::nse_include_enu_weak == 1) {
-        drhoedt += rho0 * e_nu;
-    }
+    // Maybe we're double counting neutrinos here
+
+    // drhoedt -= rho0 * snu;
+    // if (integrator_rp::nse_include_enu_weak == 1) {
+    //     drhoedt += rho0 * e_nu;
+    // }
 }
 
 
@@ -479,6 +486,11 @@ void sdc_nse_burn(BurnT& state, const amrex::Real dt) {
     amrex::Real ye_old = state.y_e;
     amrex::Real mu_p = state.mu_p;
     amrex::Real mu_n = state.mu_n;
+    amrex::Real Xn_old[NumSpec];
+
+    for (int n = 0; n < NumSpec; ++n) {
+        Xn_old[n] = state.y[SFS+n] / rho_old;
+    }
 
     // density and momentum have no reactive sources
 
@@ -494,9 +506,9 @@ void sdc_nse_burn(BurnT& state, const amrex::Real dt) {
     amrex::Real drhoedt{0.0_rt};
     amrex::Real dyedt{0.0_rt};
 
-    nse_derivs(rho_old, rhoe_old, ye_old,
-               dt, mu_p, mu_n,
-               state.ydot_a, dyedt,
+    nse_derivs(Xn_old, rho_old, rhoe_old,
+               ye_old, mu_p, mu_n,
+               dt, state.ydot_a, dyedt,
                drhoedt, state.T_fixed);
 
     // evolve to the midpoint in time
@@ -505,11 +517,36 @@ void sdc_nse_burn(BurnT& state, const amrex::Real dt) {
     amrex::Real rhoe_tmp = rhoe_old + 0.5_rt * dt * (state.ydot_a[SEINT] + drhoedt);
     amrex::Real ye_tmp = ye_old + 0.5_rt * dt * dyedt;
 
+    // Update the temperature with new internal energy
+
+    burn_t burn_state;
+    burn_state.rho = rho_tmp;
+    burn_state.mu_p = mu_p;
+    burn_state.mu_n = mu_n;
+
+    if (state.T_fixed > 0) {
+        burn_state.T = state.T_fixed;
+    } else {
+        burn_state.e = rhoe_tmp / rho_tmp;
+        eos(eos_input_re, burn_state);
+    }
+
+    // update y_e here
+    // must be called after eos otherwise it gets reset
+
+    burn_state.y_e = ye_tmp;
+
+    // With updated rho, temp, ye, get tmp NSE state
+
+    amrex::Real eps = 1.0e-10_rt;
+    bool input_ye_is_valid = true;
+    auto nse_state = get_actual_nse_state(burn_state, eps, input_ye_is_valid);
+
     // compute the derivatives at the midpoint in time
 
-    nse_derivs(rho_tmp, rhoe_tmp, ye_tmp,
-               dt, mu_p, mu_n,
-               state.ydot_a, dyedt,
+    nse_derivs(nse_state.xn, rho_tmp, rhoe_tmp,
+               ye_tmp, mu_p, mu_n,
+               dt, state.ydot_a, dyedt,
                drhoedt, state.T_fixed);
 
     // evolve to the new time
@@ -520,10 +557,7 @@ void sdc_nse_burn(BurnT& state, const amrex::Real dt) {
 
     // Update the temperature with new internal energy
 
-    burn_t burn_state;
     burn_state.rho = rho_new;
-    burn_state.mu_p = mu_p;
-    burn_state.mu_n = mu_n;
 
     if (state.T_fixed > 0) {
         burn_state.T = state.T_fixed;
@@ -533,15 +567,12 @@ void sdc_nse_burn(BurnT& state, const amrex::Real dt) {
     }
 
     // update y_e here
-    // must be called after eos to avoid y_e = 0
 
     burn_state.y_e = ye_new;
 
     // With updated rho, temp, ye, get final NSE state
 
-    amrex::Real eps = 1.0e-10_rt;
-    bool input_ye_is_valid = true;
-    auto nse_state = get_actual_nse_state(burn_state, eps, input_ye_is_valid);
+    nse_state = get_actual_nse_state(burn_state, eps, input_ye_is_valid);
 
     // store the new state
     // make sure they are normalized
