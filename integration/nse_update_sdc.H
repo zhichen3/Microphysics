@@ -309,7 +309,7 @@ void sdc_nse_burn(BurnT& state, const amrex::Real dt) {
 /// they are the sources at time t0+dt
 ///
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-void nse_derivs(const amrex::Real& Xn0[NumSpec], const amrex::Real rho0,
+void nse_derivs(const amrex::Real *Xn0, const amrex::Real rho0,
                 const amrex::Real rhoe0, const amrex::Real Ye0,
                 const amrex::Real mu_p, const amrex::Real mu_n,
                 const amrex::Real dt,
