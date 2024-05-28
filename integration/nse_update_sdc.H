@@ -340,8 +340,6 @@ void nse_derivs(const amrex::Real *Xn0, const amrex::Real rho0,
 
     // Find NSE state at t0
 
-    amrex::Real eps = 1.0e-10_rt;
-    bool input_ye_is_valid = true;
     // auto nse_state0 = get_actual_nse_state(burn_state, eps, input_ye_is_valid);
 
     // compute the plasma neutrino losses at t0
@@ -354,7 +352,7 @@ void nse_derivs(const amrex::Real *Xn0, const amrex::Real rho0,
 
     amrex::Real abar{0.0};
     for (int n = 0; n < NumSpec; ++n) {
-        abar += nse_state0.xn[n] * aion_inv[n];
+        abar += burn_state.xn[n] * aion_inv[n];
     }
     abar = 1.0 / abar;
 
@@ -363,7 +361,7 @@ void nse_derivs(const amrex::Real *Xn0, const amrex::Real rho0,
 #ifdef NEUTRINOS
     {
         constexpr int do_derivatives = 0;
-        sneut5<do_derivatives>(nse_state0.T, rho0, abar, zbar,
+        sneut5<do_derivatives>(burn_state.T, rho0, abar, zbar,
                                snu, dsnudt, dsnudd, dsnuda, dsnudz);
     }
 #endif
@@ -375,12 +373,12 @@ void nse_derivs(const amrex::Real *Xn0, const amrex::Real rho0,
     amrex::Real e_nu = 0.0_rt;
 
     for (int n = 1; n <= NumSpec; ++n) {
-        Y(n) = nse_state0.xn[n-1] * aion_inv[n-1];
+        Y(n) = burn_state.xn[n-1] * aion_inv[n-1];
     }
 
     // Fill in ydot with only weak rates contributing
 
-    get_ydot_weak(nse_state0, ydot_weak, e_nu, Y);
+    get_ydot_weak(burn_state, ydot_weak, e_nu, Y);
 
     // Find dyedt from ydot
     // Even though we don't use it to find enuc
@@ -441,6 +439,8 @@ void nse_derivs(const amrex::Real *Xn0, const amrex::Real rho0,
 
     // Note this new NSE state has the contribution from advection
 
+    amrex::Real eps = 1.0e-10_rt;
+    bool input_ye_is_valid = true;
     auto nse_state1 = get_actual_nse_state(burn_state, eps, input_ye_is_valid);
 
     // construct the finite-difference approximation to the derivatives
