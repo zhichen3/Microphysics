@@ -553,7 +553,7 @@ void sdc_nse_burn(BurnT& state, const amrex::Real dt) {
 
     // k4
 
-    nse_derivs(rho_tmp, rhoe_tmp3, ye_tmp3,
+    nse_derivs(rho_tmp3, rhoe_tmp3, ye_tmp3,
                dt, mu_p, mu_n,
                state.ydot_a, dyedt4,
                drhoedt4, state.T_fixed);
