@@ -487,36 +487,85 @@ void sdc_nse_burn(BurnT& state, const amrex::Real dt) {
     state.y[SMY] += dt * state.ydot_a[SMY];
     state.y[SMZ] += dt * state.ydot_a[SMZ];
 
-    // do an RK2 integration
+    // do an RK4 integration
 
     // get the derivatives, rho_dyedt, drhoedt, at t = t^n
 
-    amrex::Real drhoedt{0.0_rt};
-    amrex::Real dyedt{0.0_rt};
+    amrex::Real drhoedt1{0.0_rt};
+    amrex::Real dyedt1{0.0_rt};
+
+    // k1
 
     nse_derivs(rho_old, rhoe_old, ye_old,
                dt, mu_p, mu_n,
-               state.ydot_a, dyedt,
-               drhoedt, state.T_fixed);
+               state.ydot_a, dyedt1,
+               drhoedt1, state.T_fixed);
 
     // evolve to the midpoint in time
 
-    amrex::Real rho_tmp = rho_old + 0.5_rt * dt * state.ydot_a[SRHO];
-    amrex::Real rhoe_tmp = rhoe_old + 0.5_rt * dt * (state.ydot_a[SEINT] + drhoedt);
-    amrex::Real ye_tmp = ye_old + 0.5_rt * dt * dyedt;
+    amrex::Real rho_tmp1 = rho_old + 0.5_rt * dt * state.ydot_a[SRHO];
+    amrex::Real rhoe_tmp1 = rhoe_old + 0.5_rt * dt * (state.ydot_a[SEINT] + drhoedt1);
+    amrex::Real ye_tmp1 = ye_old + 0.5_rt * dt * dyedt1;
 
-    // compute the derivatives at the midpoint in time
+    // get the derivatives, rho_dyedt, drhoedt, at t = t^n + dt/2
+    // using and y = y^n + dt/2 dy/dt(y^n, t^n)
 
-    nse_derivs(rho_tmp, rhoe_tmp, ye_tmp,
+    amrex::Real drhoedt2{0.0_rt};
+    amrex::Real dyedt2{0.0_rt};
+
+    // k2
+
+    nse_derivs(rho_tmp1, rhoe_tmp1, ye_tmp1,
                dt, mu_p, mu_n,
-               state.ydot_a, dyedt,
-               drhoedt, state.T_fixed);
+               state.ydot_a, dyedt2,
+               drhoedt2, state.T_fixed);
 
-    // evolve to the new time
+
+    amrex::Real rho_tmp2 = rho_old + 0.5_rt * dt * state.ydot_a[SRHO];
+    amrex::Real rhoe_tmp2 = rhoe_old + 0.5_rt * dt * (state.ydot_a[SEINT] + drhoedt2);
+    amrex::Real ye_tmp2 = ye_old + 0.5_rt * dt * dyedt2;
+
+
+    // get the derivatives, rho_dyedt, drhoedt, at t = t^n + dt/2
+    // using and y = y^n + dt/2 dy/dt(y^n+k1, t^n+dt/2)
+
+    amrex::Real drhoedt3{0.0_rt};
+    amrex::Real dyedt3{0.0_rt};
+
+    // k3
+
+    nse_derivs(rho_tmp2, rhoe_tmp2, ye_tmp2,
+               dt, mu_p, mu_n,
+               state.ydot_a, dyedt3,
+               drhoedt3, state.T_fixed);
+
+
+    amrex::Real rho_tmp3 = rho_old + dt * state.ydot_a[SRHO];
+    amrex::Real rhoe_tmp3 = rhoe_old + dt * (state.ydot_a[SEINT] + drhoedt3);
+    amrex::Real ye_tmp3 = ye_old + dt * dyedt3;
+
+
+    // get the derivatives, rho_dyedt, drhoedt, at t = t^n + dt/2
+    // using and y = y^n + dt/2 dy/dt(y^n+k1, t^n+dt/2)
+
+    amrex::Real drhoedt4{0.0_rt};
+    amrex::Real dyedt4{0.0_rt};
+
+    // k4
+
+    nse_derivs(rho_tmp, rhoe_tmp3, ye_tmp3,
+               dt, mu_p, mu_n,
+               state.ydot_a, dyedt4,
+               drhoedt4, state.T_fixed);
+
+    // evolve to the new time using RK4
 
     amrex::Real rho_new = rho_old + dt * state.ydot_a[SRHO];
-    amrex::Real rhoe_new = rhoe_old + dt * (state.ydot_a[SEINT] + drhoedt);
-    amrex::Real ye_new = ye_old + dt * dyedt;
+    amrex::Real rhoe_new = rhoe_old + dt * state.ydot_a[SEINT] + dt / 6.0_rt *
+        (drhoedt1 + 2.0_rt*drhoedt2 + 2.0_rt*drhoedt3 + drhoedt4);
+    amrex::Real ye_new = ye_old + 0.1666666667_rt * dt *
+        (dyedt1 + 2.0_rt*dyedt2 + 2.0_rt*dyedt3 + dyedt4);
+
 
     // Update the temperature with new internal energy
 
