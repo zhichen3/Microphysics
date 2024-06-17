@@ -105,7 +105,7 @@ void compute_bion_contribution(amrex::Array1D<amrex::Real, 1, NumSpec>& u_b,
         // u_b here is the dimensionless binding energy contribution
         // for NSE massfraction calculations
 
-        u_b(n+1) = network::bion(n+1)) * ikT;
+        u_b(n+1) = network::bion(n+1) * ikT;
     }
 }
 
