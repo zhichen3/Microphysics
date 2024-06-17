@@ -230,7 +230,8 @@ void fcn(Array1D<Real, 1, 2>& x, Array1D<Real, 1, 2>& fvec,
 
     // Apply exponent component for calculating nse mass fractions
 
-    apply_nse_exponent(nse_state, state_data.u_c);
+    apply_nse_exponent(nse_state,
+                       state_data.u_b, state_data.u_c);
 
     fvec(1) = -1.0_rt;
 
@@ -265,7 +266,8 @@ void jcn(Array1D<Real, 1, 2>& x, Array2D<Real, 1, 2, 1, 2>& fjac,
     nse_state.mu_p = x(1);
     nse_state.mu_n = x(2);
 
-    apply_nse_exponent(nse_state, state_data.u_c);
+    apply_nse_exponent(nse_state,
+                       state_data.u_b, state_data.u_c);
 
     // evaluate jacobian of the constraint
 
