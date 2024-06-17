@@ -26,6 +26,7 @@ template <typename T>
 struct nse_solver_data
 {
     T state;
+    amrex::Array1D<amrex::Real, 1, NumSpec> u_b;
     amrex::Array1D<amrex::Real, 1, NumSpec> u_c;
 };
 
@@ -83,11 +84,37 @@ T get_nonexponent_nse_state(const T& state) {
     return nse_state;
 }
 
+
+template <typename T>
+AMREX_GPU_HOST_DEVICE AMREX_INLINE
+void compute_bion_contribution(amrex::Array1D<amrex::Real, 1, NumSpec>& u_b,
+                               const T& state) {
+    // This function computes and stores binding energy contribution
+    // for NSE mass fraction calculations
+
+    amrex::Real T_in = state.T_fixed > 0.0_rt ? state.T_fixed : state.T;
+    const amrex::Real ikT = C::Legacy::MeV2erg / (T_in * C::k_B);
+
+    for (int n = 0; n < NumSpec; ++n) {
+#ifdef NEW_NETWORK_IMPLEMENTATION
+        if (n == NSE_INDEX::H1_index) {
+            continue;
+        }
+#endif
+
+        // u_b here is the dimensionless binding energy contribution
+        // for NSE massfraction calculations
+
+        u_b(n+1) = network::bion(n+1)) * ikT;
+    }
+}
+
+
 #if SCREEN_METHOD == SCREEN_METHOD_chabrier1998
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
 void compute_coulomb_contribution(amrex::Array1D<amrex::Real, 1, NumSpec>& u_c,
-                                const T& state) {
+                                  const T& state) {
     // This function computes the coulomb contribution 1D array
 
     // if we use chabrier1998 screening
@@ -137,9 +164,11 @@ void compute_coulomb_contribution(amrex::Array1D<amrex::Real, 1, NumSpec>& u_c,
 }
 #endif
 
+
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
 void apply_nse_exponent(T& nse_state,
+                        const amrex::Array1D<amrex::Real, 1, NumSpec>& u_b
                         const amrex::Array1D<amrex::Real, 1, NumSpec>& u_c) {
     // This function applies the nse exponent which depends on
     // the chemical potential.
@@ -165,8 +194,8 @@ void apply_nse_exponent(T& nse_state,
 
         exponent = amrex::min(500.0_rt,
                               (zion[n] * nse_state.mu_p + (aion[n] - zion[n]) *
-                               nse_state.mu_n + network::bion(n+1)) /
-                              C::k_B / T_in * C::Legacy::MeV2erg - u_c(n+1));
+                               nse_state.mu_n) / T_in * C::Legacy::MeV2erg / C::k_B +
+                               u_b(n+1) - u_c(n+1));
 
         nse_state.xn[n] *= std::exp(exponent);
     }
@@ -512,11 +541,15 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-10_rt,
 #endif
     }
 
-    nse_solver_data<T> state_data = {state, {0.0_rt}};
+    nse_solver_data<T> state_data = {state, {0.0_rt}, {0.0_rt}};
 
     // Get nse_state without the exponent term
 
     state_data.state = get_nonexponent_nse_state(state);
+
+    // Compute the binding energy contribution
+
+    compute_bion_contribution(state_data.u_b, state);
 
     // if use chabrier1998 screening, calculate the coulomb correction term
 
@@ -552,7 +585,8 @@ T get_actual_nse_state(T& state, amrex::Real eps=1.0e-10_rt,
 
     // Apply exponent for calculating nse mass fractions
 
-    apply_nse_exponent(state_data.state, state_data.u_c);
+    apply_nse_exponent(state_data.state,
+                       state_data.u_b, state_data.u_c);
 
     // update mu_n and mu_p to input state
 
