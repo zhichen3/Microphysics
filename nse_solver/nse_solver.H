@@ -168,7 +168,7 @@ void compute_coulomb_contribution(amrex::Array1D<amrex::Real, 1, NumSpec>& u_c,
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
 void apply_nse_exponent(T& nse_state,
-                        const amrex::Array1D<amrex::Real, 1, NumSpec>& u_b
+                        const amrex::Array1D<amrex::Real, 1, NumSpec>& u_b,
                         const amrex::Array1D<amrex::Real, 1, NumSpec>& u_c) {
     // This function applies the nse exponent which depends on
     // the chemical potential.
