@@ -21,6 +21,9 @@ replaced with ones in the ``admath`` namespace.  This namespace also
 exports the original functions, so they work fine on normal numeric
 types too.
 
+To manually check whether a type is a dual number or not, use
+``autodiff::detail::isDual<dual_t>``.
+
 Derivatives of single-variable functions
 ========================================
 
@@ -39,6 +42,12 @@ We can then use ``autodiff::val(result)`` or
 ``autodiff::derivative(result)`` to get the derivative with respect to
 x.  The ``static_cast`` version has the advantage of working on normal
 numbers as well.
+
+``autodiff::seed(x)`` sets the derivative term of ``x`` to 1 (it is equivalent
+to ``x.grad = 1.0``), which effectively tells the code that
+:math:`\frac{\partial x}{\partial x} = 1`. This propagates through any
+operations that ``f(x)`` does, and we end up with :math:`\frac{\partial
+f(x)}{\partial x}` in the derivative term of ``result``.
 
 
 Derivatives of multi-variable functions
