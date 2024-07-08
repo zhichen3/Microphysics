@@ -23,6 +23,7 @@ for astrophysical simulation codes.
    design
    data_structures
    autodiff
+   approx_math
    rp_intro
    unit_tests
 

@@ -12,7 +12,7 @@ Taylor approximation for :math:`|x| < 0.113`.
 The following expression works well for :math:`-1 < x < 1`:
 
 .. math::
-   arctan(x) = Ax^5 + Bx^3 + Cx
+   \arctan(x) = Ax^5 + Bx^3 + Cx
 
 where :math:`A = 0.0776509570923569`, :math:`B = -0.287434475393028`,
 and :math:`C = \frac{\pi}{4} - A - B`.
@@ -20,7 +20,7 @@ and :math:`C = \frac{\pi}{4} - A - B`.
 For :math:`x > 1`, we use the identity:
 
 .. math::
-   \arctan(x) = sign(x) \frac{\pi}{2} - \arctan(\frac{1}{x})
+   \arctan(x) = \text{sgn}(x) \frac{\pi}{2} - \arctan(\frac{1}{x})
 
 Comparing to std::atan, fast_atan is roughly 3-4 times faster.
 
@@ -53,7 +53,7 @@ Therefore, we simply require mantissa bits to be equal to 0, and by setting
 To achieve that, we start by creating an integer representation and shift by
 the number of mantissa bits (23 bits for single precision and
 52 bits for double precision) by multiplying the entire expression
-by:math:`2^{m}`. Lastly, we can add a constant shift to minimize the error.
+by :math:`2^{m}`. Lastly, we can add a constant shift to minimize the error.
 The choice of the constant is discussed in :cite:`Schraudolph_1999`.
 After obtaining the desired bit representation in integer, we use
 ``memcpy`` to copy bit values to a floating-point variable.
@@ -75,7 +75,7 @@ If one needs slighly better accuracy, ``ekmett_exp``
 uses the fact that
 
 .. math::
-   \exp(x) = \frac{\exp(x/2)}{\exp(x/2)}
+   \exp(x) = \frac{\exp(x/2)}{\exp(-x/2)}
 
 By using this identity, ``ekmett_exp`` is roughly 2.5 times faster than
 ``std::exp`` with a 0.1% relative error.
@@ -94,21 +94,20 @@ process of ``jrade_exp`` as discussed in
 fast_pow
 ==========
 
-An implementation of ``fast_pow`` is relies on using the identity:
+An implementation of ``fast_pow`` relies on using the identity:
 
 .. math::
    x^y = \exp(\log(x) y)
 
 Therefore, we can simply combine the process of ``jrade_exp`` and ``fast_log``
 to formulate a ``fast_pow`` algorithm (https://martin.ankerl.com/2007/10/04/optimized-pow-approximation-for-java-and-c-c/).
-This is the ``vfast_pow`` function, which is very fast,
-and ~30 times faster than ``std::pow``.
+This is the ``vfast_pow`` function, which is ~30 times faster than ``std::pow``.
 However, this gives poor accuracy when exponent >> 1.
 
 In order to improve the accuracy, we can split up the exponent into its integer
-part and the fraction part and solve them independently. To solve :math:`x^n`,
+and the fraction part and solve them independently. To solve :math:`x^n`,
 where ``n`` is an integer, we can use exponentiation by squaring. Then we simply
 use ``vfast_pow`` when solving for the integer part.
 
-``fast_pow`` uses this combination, achieving ~1-2% relative error and
-~6 times faster compared to ``std::pow``.
+``fast_pow`` uses this combination, achieving ~2% relative error and
+~5-6 times faster compared to ``std::pow``.
