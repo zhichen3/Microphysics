@@ -7,6 +7,7 @@
 #include <string>
 
 #include <AMReX_Array.H>
+#include <approx_math.H>
 
 using namespace amrex;
 

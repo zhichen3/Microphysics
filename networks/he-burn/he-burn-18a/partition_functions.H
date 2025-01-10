@@ -7,6 +7,7 @@
 #include <tfactors.H>
 #include <fundamental_constants.H>
 #include <network_properties.H>
+#include <approx_math.H>
 
 using namespace amrex;
 using namespace Species;
