@@ -26,7 +26,7 @@ tf_t evaluate_tfactors(const amrex::Real T)
     tf.T943i = tf.T9i * tf.T913i;
     tf.T923 = tf.T913 * tf.T913;
     tf.T953 = tf.T9 * tf.T923;
-    tf.lnT9 = std::log(tf.T9);
+    tf.lnT9 = fast_log(tf.T9);
 
     return tf;
 }

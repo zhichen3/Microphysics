@@ -136,7 +136,7 @@ namespace part_fun {
             // find the PF
 
             amrex::Real log10_pf = pf_array(idx) + slope * (t9 - temp_array(idx));
-            pf = std::pow(10.0_rt, log10_pf);
+            pf = fast_pow(10.0_rt, log10_pf);
 
             // find the derivative (with respect to T, not T9)
 

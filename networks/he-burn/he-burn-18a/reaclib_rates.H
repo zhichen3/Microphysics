@@ -47,7 +47,7 @@ void rate_p_C12_to_N13(const tf_t& tfactors, amrex::Real& rate, amrex::Real& dra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -64,7 +64,7 @@ void rate_p_C12_to_N13(const tf_t& tfactors, amrex::Real& rate, amrex::Real& dra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -85,7 +85,7 @@ void rate_He4_C12_to_O16(const tf_t& tfactors, amrex::Real& rate, amrex::Real& d
     amrex::Real dln_set_rate_dT9{0.0};
     amrex::Real set_rate{0.0};
 
-    // nac2 
+    // nac2
     ln_set_rate =  254.634 + -1.84097 * tfactors.T9i + 103.411 * tfactors.T913i + -420.567 * tfactors.T913
                          + 64.0874 * tfactors.T9 + -12.4624 * tfactors.T953 + 137.303 * tfactors.lnT9;
 
@@ -96,13 +96,13 @@ void rate_He4_C12_to_O16(const tf_t& tfactors, amrex::Real& rate, amrex::Real& d
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
     }
 
-    // nac2 
+    // nac2
     ln_set_rate =  69.6526 + -1.39254 * tfactors.T9i + 58.9128 * tfactors.T913i + -148.273 * tfactors.T913
                          + 9.08324 * tfactors.T9 + -0.541041 * tfactors.T953 + 70.3554 * tfactors.lnT9;
 
@@ -113,7 +113,7 @@ void rate_He4_C12_to_O16(const tf_t& tfactors, amrex::Real& rate, amrex::Real& d
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -145,7 +145,7 @@ void rate_He4_O16_to_Ne20(const tf_t& tfactors, amrex::Real& rate, amrex::Real& 
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -162,7 +162,7 @@ void rate_He4_O16_to_Ne20(const tf_t& tfactors, amrex::Real& rate, amrex::Real& 
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -179,7 +179,7 @@ void rate_He4_O16_to_Ne20(const tf_t& tfactors, amrex::Real& rate, amrex::Real& 
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -211,7 +211,7 @@ void rate_He4_Ne20_to_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Real&
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -228,7 +228,7 @@ void rate_He4_Ne20_to_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Real&
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -245,7 +245,7 @@ void rate_He4_Ne20_to_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Real&
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -262,7 +262,7 @@ void rate_He4_Ne20_to_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Real&
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -294,7 +294,7 @@ void rate_p_Na23_to_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Real& d
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -311,7 +311,7 @@ void rate_p_Na23_to_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Real& d
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -328,7 +328,7 @@ void rate_p_Na23_to_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Real& d
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -360,7 +360,7 @@ void rate_He4_Mg24_to_Si28(const tf_t& tfactors, amrex::Real& rate, amrex::Real&
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -377,7 +377,7 @@ void rate_He4_Mg24_to_Si28(const tf_t& tfactors, amrex::Real& rate, amrex::Real&
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -409,7 +409,7 @@ void rate_p_Al27_to_Si28(const tf_t& tfactors, amrex::Real& rate, amrex::Real& d
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -426,7 +426,7 @@ void rate_p_Al27_to_Si28(const tf_t& tfactors, amrex::Real& rate, amrex::Real& d
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -443,7 +443,7 @@ void rate_p_Al27_to_Si28(const tf_t& tfactors, amrex::Real& rate, amrex::Real& d
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -475,7 +475,7 @@ void rate_He4_Si28_to_S32(const tf_t& tfactors, amrex::Real& rate, amrex::Real& 
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -507,7 +507,7 @@ void rate_p_P31_to_S32(const tf_t& tfactors, amrex::Real& rate, amrex::Real& dra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -524,7 +524,7 @@ void rate_p_P31_to_S32(const tf_t& tfactors, amrex::Real& rate, amrex::Real& dra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -541,7 +541,7 @@ void rate_p_P31_to_S32(const tf_t& tfactors, amrex::Real& rate, amrex::Real& dra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -573,7 +573,7 @@ void rate_C12_C12_to_p_Na23(const tf_t& tfactors, amrex::Real& rate, amrex::Real
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -605,7 +605,7 @@ void rate_C12_C12_to_He4_Ne20(const tf_t& tfactors, amrex::Real& rate, amrex::Re
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -637,7 +637,7 @@ void rate_He4_N13_to_p_O16(const tf_t& tfactors, amrex::Real& rate, amrex::Real&
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -669,7 +669,7 @@ void rate_C12_O16_to_p_Al27(const tf_t& tfactors, amrex::Real& rate, amrex::Real
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -701,7 +701,7 @@ void rate_C12_O16_to_He4_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Re
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -733,7 +733,7 @@ void rate_O16_O16_to_p_P31(const tf_t& tfactors, amrex::Real& rate, amrex::Real&
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -765,7 +765,7 @@ void rate_O16_O16_to_He4_Si28(const tf_t& tfactors, amrex::Real& rate, amrex::Re
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -797,7 +797,7 @@ void rate_p_Na23_to_He4_Ne20(const tf_t& tfactors, amrex::Real& rate, amrex::Rea
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -814,7 +814,7 @@ void rate_p_Na23_to_He4_Ne20(const tf_t& tfactors, amrex::Real& rate, amrex::Rea
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -831,7 +831,7 @@ void rate_p_Na23_to_He4_Ne20(const tf_t& tfactors, amrex::Real& rate, amrex::Rea
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -863,7 +863,7 @@ void rate_p_Al27_to_He4_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Rea
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -880,7 +880,7 @@ void rate_p_Al27_to_He4_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Rea
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -897,7 +897,7 @@ void rate_p_Al27_to_He4_Mg24(const tf_t& tfactors, amrex::Real& rate, amrex::Rea
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -929,7 +929,7 @@ void rate_p_P31_to_He4_Si28(const tf_t& tfactors, amrex::Real& rate, amrex::Real
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -946,7 +946,7 @@ void rate_p_P31_to_He4_Si28(const tf_t& tfactors, amrex::Real& rate, amrex::Real
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -963,7 +963,7 @@ void rate_p_P31_to_He4_Si28(const tf_t& tfactors, amrex::Real& rate, amrex::Real
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -995,7 +995,7 @@ void rate_He4_He4_He4_to_C12(const tf_t& tfactors, amrex::Real& rate, amrex::Rea
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1012,7 +1012,7 @@ void rate_He4_He4_He4_to_C12(const tf_t& tfactors, amrex::Real& rate, amrex::Rea
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1029,7 +1029,7 @@ void rate_He4_He4_He4_to_C12(const tf_t& tfactors, amrex::Real& rate, amrex::Rea
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1061,7 +1061,7 @@ void rate_C12_C12_to_Mg24_modified(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1093,7 +1093,7 @@ void rate_O16_O16_to_S32_modified(const tf_t& tfactors, amrex::Real& rate, amrex
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1125,7 +1125,7 @@ void rate_C12_O16_to_Si28_modified(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1157,7 +1157,7 @@ void rate_He4_S32_to_Ar36_removed(const tf_t& tfactors, amrex::Real& rate, amrex
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1189,7 +1189,7 @@ void rate_p_Cl35_to_Ar36_removed(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1206,7 +1206,7 @@ void rate_p_Cl35_to_Ar36_removed(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1223,7 +1223,7 @@ void rate_p_Cl35_to_Ar36_removed(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1240,7 +1240,7 @@ void rate_p_Cl35_to_Ar36_removed(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1272,7 +1272,7 @@ void rate_p_Cl35_to_He4_S32_removed(const tf_t& tfactors, amrex::Real& rate, amr
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1289,7 +1289,7 @@ void rate_p_Cl35_to_He4_S32_removed(const tf_t& tfactors, amrex::Real& rate, amr
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1306,7 +1306,7 @@ void rate_p_Cl35_to_He4_S32_removed(const tf_t& tfactors, amrex::Real& rate, amr
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1323,7 +1323,7 @@ void rate_p_Cl35_to_He4_S32_removed(const tf_t& tfactors, amrex::Real& rate, amr
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1355,7 +1355,7 @@ void rate_He4_Ar36_to_Ca40_removed(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1387,7 +1387,7 @@ void rate_p_K39_to_Ca40_removed(const tf_t& tfactors, amrex::Real& rate, amrex::
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1404,7 +1404,7 @@ void rate_p_K39_to_Ca40_removed(const tf_t& tfactors, amrex::Real& rate, amrex::
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1421,7 +1421,7 @@ void rate_p_K39_to_Ca40_removed(const tf_t& tfactors, amrex::Real& rate, amrex::
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1453,7 +1453,7 @@ void rate_p_K39_to_He4_Ar36_removed(const tf_t& tfactors, amrex::Real& rate, amr
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1474,7 +1474,7 @@ void rate_He4_Ca40_to_Ti44_removed(const tf_t& tfactors, amrex::Real& rate, amre
     amrex::Real dln_set_rate_dT9{0.0};
     amrex::Real set_rate{0.0};
 
-    // chw0 
+    // chw0
     ln_set_rate =  53.75 + -76.4273 * tfactors.T913i + 3.87451 * tfactors.T913
                          + -3.61477 * tfactors.T9 + 0.367451 * tfactors.T953 + -0.666667 * tfactors.lnT9;
 
@@ -1485,7 +1485,7 @@ void rate_He4_Ca40_to_Ti44_removed(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1517,7 +1517,7 @@ void rate_p_Sc43_to_Ti44_removed(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1549,7 +1549,7 @@ void rate_p_Sc43_to_He4_Ca40_removed(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1581,7 +1581,7 @@ void rate_He4_Ti44_to_Cr48_removed(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1613,7 +1613,7 @@ void rate_He4_Ti44_to_p_V47_removed(const tf_t& tfactors, amrex::Real& rate, amr
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1645,7 +1645,7 @@ void rate_p_V47_to_Cr48_removed(const tf_t& tfactors, amrex::Real& rate, amrex::
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1662,7 +1662,7 @@ void rate_p_V47_to_Cr48_removed(const tf_t& tfactors, amrex::Real& rate, amrex::
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1679,7 +1679,7 @@ void rate_p_V47_to_Cr48_removed(const tf_t& tfactors, amrex::Real& rate, amrex::
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1696,7 +1696,7 @@ void rate_p_V47_to_Cr48_removed(const tf_t& tfactors, amrex::Real& rate, amrex::
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1728,7 +1728,7 @@ void rate_He4_Cr48_to_Fe52_removed(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1760,7 +1760,7 @@ void rate_He4_Cr48_to_p_Mn51_removed(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1792,7 +1792,7 @@ void rate_p_Mn51_to_Fe52_removed(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1824,7 +1824,7 @@ void rate_He4_Fe52_to_Ni56_removed(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1856,7 +1856,7 @@ void rate_He4_Fe52_to_p_Co55_removed(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1888,7 +1888,7 @@ void rate_p_Co55_to_Ni56_removed(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1920,7 +1920,7 @@ void rate_N13_to_p_C12_derived(const tf_t& tfactors, amrex::Real& rate, amrex::R
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1937,7 +1937,7 @@ void rate_N13_to_p_C12_derived(const tf_t& tfactors, amrex::Real& rate, amrex::R
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -1985,7 +1985,7 @@ void rate_O16_to_He4_C12_derived(const tf_t& tfactors, amrex::Real& rate, amrex:
     amrex::Real dln_set_rate_dT9{0.0};
     amrex::Real set_rate{0.0};
 
-    // nac2 
+    // nac2
     ln_set_rate =  279.2945280776573 + -84.95160042649215 * tfactors.T9i + 103.411 * tfactors.T913i + -420.567 * tfactors.T913
                          + 64.0874 * tfactors.T9 + -12.4624 * tfactors.T953 + 138.803 * tfactors.lnT9;
 
@@ -1996,13 +1996,13 @@ void rate_O16_to_He4_C12_derived(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
     }
 
-    // nac2 
+    // nac2
     ln_set_rate =  94.31312807765731 + -84.50317042649215 * tfactors.T9i + 58.9128 * tfactors.T913i + -148.273 * tfactors.T913
                          + 9.08324 * tfactors.T9 + -0.541041 * tfactors.T953 + 71.8554 * tfactors.lnT9;
 
@@ -2013,7 +2013,7 @@ void rate_O16_to_He4_C12_derived(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2071,7 +2071,7 @@ void rate_Ne20_to_He4_O16_derived(const tf_t& tfactors, amrex::Real& rate, amrex
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2086,7 +2086,7 @@ void rate_Ne20_to_He4_O16_derived(const tf_t& tfactors, amrex::Real& rate, amrex
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2103,7 +2103,7 @@ void rate_Ne20_to_He4_O16_derived(const tf_t& tfactors, amrex::Real& rate, amrex
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2160,7 +2160,7 @@ void rate_Mg24_to_p_Na23_derived(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2177,7 +2177,7 @@ void rate_Mg24_to_p_Na23_derived(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2192,7 +2192,7 @@ void rate_Mg24_to_p_Na23_derived(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2247,7 +2247,7 @@ void rate_Mg24_to_He4_Ne20_derived(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2264,7 +2264,7 @@ void rate_Mg24_to_He4_Ne20_derived(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2281,7 +2281,7 @@ void rate_Mg24_to_He4_Ne20_derived(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2296,7 +2296,7 @@ void rate_Mg24_to_He4_Ne20_derived(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2353,7 +2353,7 @@ void rate_Si28_to_p_Al27_derived(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2370,7 +2370,7 @@ void rate_Si28_to_p_Al27_derived(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2387,7 +2387,7 @@ void rate_Si28_to_p_Al27_derived(const tf_t& tfactors, amrex::Real& rate, amrex:
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2444,7 +2444,7 @@ void rate_Si28_to_He4_Mg24_derived(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2459,7 +2459,7 @@ void rate_Si28_to_He4_Mg24_derived(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2516,7 +2516,7 @@ void rate_S32_to_p_P31_derived(const tf_t& tfactors, amrex::Real& rate, amrex::R
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2531,7 +2531,7 @@ void rate_S32_to_p_P31_derived(const tf_t& tfactors, amrex::Real& rate, amrex::R
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2548,7 +2548,7 @@ void rate_S32_to_p_P31_derived(const tf_t& tfactors, amrex::Real& rate, amrex::R
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2605,7 +2605,7 @@ void rate_S32_to_He4_Si28_derived(const tf_t& tfactors, amrex::Real& rate, amrex
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2662,7 +2662,7 @@ void rate_C12_to_He4_He4_He4_derived(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2679,7 +2679,7 @@ void rate_C12_to_He4_He4_He4_derived(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2696,7 +2696,7 @@ void rate_C12_to_He4_He4_He4_derived(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2750,7 +2750,7 @@ void rate_p_O16_to_He4_N13_derived(const tf_t& tfactors, amrex::Real& rate, amre
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2813,7 +2813,7 @@ void rate_He4_Ne20_to_p_Na23_derived(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2830,7 +2830,7 @@ void rate_He4_Ne20_to_p_Na23_derived(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2847,7 +2847,7 @@ void rate_He4_Ne20_to_p_Na23_derived(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2909,7 +2909,7 @@ void rate_He4_Mg24_to_p_Al27_derived(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2926,7 +2926,7 @@ void rate_He4_Mg24_to_p_Al27_derived(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -2943,7 +2943,7 @@ void rate_He4_Mg24_to_p_Al27_derived(const tf_t& tfactors, amrex::Real& rate, am
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3005,7 +3005,7 @@ void rate_He4_Si28_to_p_P31_derived(const tf_t& tfactors, amrex::Real& rate, amr
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3022,7 +3022,7 @@ void rate_He4_Si28_to_p_P31_derived(const tf_t& tfactors, amrex::Real& rate, amr
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3039,7 +3039,7 @@ void rate_He4_Si28_to_p_P31_derived(const tf_t& tfactors, amrex::Real& rate, amr
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3101,7 +3101,7 @@ void rate_He4_S32_to_p_Cl35_derived_removed(const tf_t& tfactors, amrex::Real& r
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3118,7 +3118,7 @@ void rate_He4_S32_to_p_Cl35_derived_removed(const tf_t& tfactors, amrex::Real& r
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3135,7 +3135,7 @@ void rate_He4_S32_to_p_Cl35_derived_removed(const tf_t& tfactors, amrex::Real& r
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3152,7 +3152,7 @@ void rate_He4_S32_to_p_Cl35_derived_removed(const tf_t& tfactors, amrex::Real& r
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3214,7 +3214,7 @@ void rate_Ar36_to_He4_S32_derived_removed(const tf_t& tfactors, amrex::Real& rat
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3269,7 +3269,7 @@ void rate_Ar36_to_p_Cl35_derived_removed(const tf_t& tfactors, amrex::Real& rate
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3284,7 +3284,7 @@ void rate_Ar36_to_p_Cl35_derived_removed(const tf_t& tfactors, amrex::Real& rate
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3301,7 +3301,7 @@ void rate_Ar36_to_p_Cl35_derived_removed(const tf_t& tfactors, amrex::Real& rate
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3318,7 +3318,7 @@ void rate_Ar36_to_p_Cl35_derived_removed(const tf_t& tfactors, amrex::Real& rate
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3375,7 +3375,7 @@ void rate_He4_Ar36_to_p_K39_derived_removed(const tf_t& tfactors, amrex::Real& r
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3437,7 +3437,7 @@ void rate_Ca40_to_He4_Ar36_derived_removed(const tf_t& tfactors, amrex::Real& ra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3494,7 +3494,7 @@ void rate_Ca40_to_p_K39_derived_removed(const tf_t& tfactors, amrex::Real& rate,
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3511,7 +3511,7 @@ void rate_Ca40_to_p_K39_derived_removed(const tf_t& tfactors, amrex::Real& rate,
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3528,7 +3528,7 @@ void rate_Ca40_to_p_K39_derived_removed(const tf_t& tfactors, amrex::Real& rate,
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3585,7 +3585,7 @@ void rate_He4_Ca40_to_p_Sc43_derived_removed(const tf_t& tfactors, amrex::Real& 
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3636,7 +3636,7 @@ void rate_Ti44_to_He4_Ca40_derived_removed(const tf_t& tfactors, amrex::Real& ra
     amrex::Real dln_set_rate_dT9{0.0};
     amrex::Real set_rate{0.0};
 
-    // chw0 
+    // chw0
     ln_set_rate =  78.69908591662849 + -59.4975248620018 * tfactors.T9i + -76.4273 * tfactors.T913i + 3.87451 * tfactors.T913
                          + -3.61477 * tfactors.T9 + 0.367451 * tfactors.T953 + 0.833333 * tfactors.lnT9;
 
@@ -3647,7 +3647,7 @@ void rate_Ti44_to_He4_Ca40_derived_removed(const tf_t& tfactors, amrex::Real& ra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3704,7 +3704,7 @@ void rate_Ti44_to_p_Sc43_derived_removed(const tf_t& tfactors, amrex::Real& rate
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3761,7 +3761,7 @@ void rate_Cr48_to_He4_Ti44_derived_removed(const tf_t& tfactors, amrex::Real& ra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3818,7 +3818,7 @@ void rate_Cr48_to_p_V47_derived_removed(const tf_t& tfactors, amrex::Real& rate,
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3835,7 +3835,7 @@ void rate_Cr48_to_p_V47_derived_removed(const tf_t& tfactors, amrex::Real& rate,
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3852,7 +3852,7 @@ void rate_Cr48_to_p_V47_derived_removed(const tf_t& tfactors, amrex::Real& rate,
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3869,7 +3869,7 @@ void rate_Cr48_to_p_V47_derived_removed(const tf_t& tfactors, amrex::Real& rate,
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3926,7 +3926,7 @@ void rate_p_V47_to_He4_Ti44_derived_removed(const tf_t& tfactors, amrex::Real& r
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -3988,7 +3988,7 @@ void rate_Fe52_to_He4_Cr48_derived_removed(const tf_t& tfactors, amrex::Real& ra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -4045,7 +4045,7 @@ void rate_Fe52_to_p_Mn51_derived_removed(const tf_t& tfactors, amrex::Real& rate
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -4102,7 +4102,7 @@ void rate_p_Mn51_to_He4_Cr48_derived_removed(const tf_t& tfactors, amrex::Real& 
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -4164,7 +4164,7 @@ void rate_Ni56_to_He4_Fe52_derived_removed(const tf_t& tfactors, amrex::Real& ra
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -4221,7 +4221,7 @@ void rate_Ni56_to_p_Co55_derived_removed(const tf_t& tfactors, amrex::Real& rate
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
@@ -4278,7 +4278,7 @@ void rate_p_Co55_to_He4_Fe52_derived_removed(const tf_t& tfactors, amrex::Real& 
 
     // avoid underflows by zeroing rates in [0.0, 1.e-100]
     ln_set_rate = std::max(ln_set_rate, -230.0);
-    set_rate = std::exp(ln_set_rate);
+    set_rate = fast_exp(ln_set_rate);
     rate += set_rate;
     if constexpr (do_T_derivatives) {
         drate_dT += set_rate * dln_set_rate_dT9 / 1.0e9;
