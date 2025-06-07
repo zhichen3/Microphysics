@@ -92,7 +92,6 @@ void burn_cell_c(const eos_t& eos_state)
     ase_tol = 1.e-100;
     burn_state.mu_p = mu_p;
     burn_state.mu_n = mu_n;
-    amrex::Real old_xn[NumSpec] {0.0};
 
     // loop over steps, burn, and output the current state
 
@@ -119,25 +118,6 @@ void burn_cell_c(const eos_t& eos_state)
         energy_initial = burn_state.e;
 
         t += dt;
-
-        // Check if we are in equilibrium by comparing new xn and old xn
-
-        bool in_equilibrium = true;
-        for (int nuc = 0; nuc < NumSpec; ++nuc) {
-            amrex::Real rel_err = std::abs(burn_state.xn[nuc] - old_xn[nuc]) / burn_state.xn[nuc];
-            if (rel_err > 1.e-10) {
-                in_equilibrium = false;
-                break;
-            }
-        }
-
-        for (int nuc = 0; nuc < NumSpec; ++nuc) {
-            old_xn[nuc] = burn_state.xn[nuc];
-        }
-
-        if (in_equilibrium) {
-            break;
-        }
     }
 
     // Now find the mass fraction via NSE calculation
