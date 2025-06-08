@@ -121,7 +121,7 @@ void burn_cell_c(const eos_t& eos_state)
     }
 
     // Now find the mass fraction via NSE calculation
-    auto nse_state = get_actual_nse_state(burn_state);
+    auto nse_state = get_actual_nse_state(burn_state, 1.e-12);
 
     // Now print out the result.
     std::cout << std::scientific << std::setprecision(8);
@@ -133,6 +133,8 @@ void burn_cell_c(const eos_t& eos_state)
               << burn_state.rho << std::endl;
     std::cout << " Initial vs. Final vs. NSE y_e = " << burn_state_in.y_e << "  "
               << burn_state.y_e << "  " <<  nse_state.y_e << std::endl;
+    std::cout << " Solved Chemical Potentials are: " << burn_state.mu_p << " and "
+              << burn_state.mu_n << std::endl;
     std::cout << "------------------------------------" << std::endl;
     std::cout << "Element" << std::setw(14) << "Burn Xs" << std::setw(20) << "NSE Xs "
               << std::setw(20) << "abs err" << std::setw(20) << "rel err" << std::endl;
