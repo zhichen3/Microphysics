@@ -11,14 +11,25 @@ def get_library():
 
     reaclib_lib = pyna.ReacLibLibrary()
 
-    all_reactants = ["p",
+    all_reactants = ["p", "n",
                      "he4", "c12", "o16", "ne20", "mg24", "si28", "s32",
                      "ar36", "ca40", "ti44", "cr48", "fe52", "ni56",
-                     "na23", "al27", "p31", "cl35", "k39", "sc43", "v47", "mn51", "co55",
-                     "n13"]
+                     "al27", "p31", "cl35", "k39", "sc43", "v47", "mn51", "co55",
+                     "n13", "n14", "f18", "ne21", "na22", "na23"]
 
-    #extra = ["n", "n14", "f18", "ne21", "na22"]
     subch = reaclib_lib.linking_nuclei(all_reactants)
+
+    # in this list, we have the reactants, the actual reactants,
+    # and modified products that we will use instead
+
+    other_rates = [("c12(c12,n)mg23", "mg24"),
+                   ("o16(o16,n)s31", "s32"),
+                   ("o16(c12,n)si27", "si28")]
+    for r, mp in other_rates:
+        _r = reaclib_lib.get_rate_by_name(r)
+        forward_rate = pyna.ModifiedRate(_r, new_products=[mp])
+        derived_rate = pyna.DerivedRate(rate=forward_rate, compute_Q=True, use_pf=True)
+        subch += pyna.Library(rates=[forward_rate, derived_rate])
 
     # C12+Ne20 and reverse
     # (a,g) links between Na23 and Al27
@@ -39,15 +50,16 @@ def get_library():
         subch.remove_rate(_r)
 
     # additional neutron rates to remove
-    # for r in subch.get_rates():
-    #     if (r == subch.get_rate_by_name("mg24(n,a)ne21") or r == subch.get_rate_by_name("ne21(a,n)mg24")
-    #         or r == subch.get_rate_by_name("na22(n,g)na23") or r == subch.get_rate_by_name("na23(g,n)na22")
-    #         or r == subch.get_rate_by_name("ne21(g,n)ne20") or r == subch.get_rate_by_name("ne20(n,g)ne21")):
-    #         continue
+    for r in subch.get_rates():
+        if (r == subch.get_rate_by_name("mg24(n,a)ne21") or r == subch.get_rate_by_name("ne21(a,n)mg24")
+            or r == subch.get_rate_by_name("na22(n,g)na23") or r == subch.get_rate_by_name("na23(g,n)na22")
+            or r == subch.get_rate_by_name("ne21(g,n)ne20") or r == subch.get_rate_by_name("ne20(n,g)ne21")
+            or r == subch.get_rate_by_name("n13(n,g)n14") or r == subch.get_rate_by_name("n14(g,n)n13")):
+            continue
 
-    #     if pyna.Nucleus("n") in r.reactants or pyna.Nucleus("n") in r.products:
-    #         print("removing neutron rates: ", r)
-    #         subch.remove_rate(r)
+        if pyna.Nucleus("n") in r.reactants or pyna.Nucleus("n") in r.products:
+            print("removing neutron rates: ", r)
+            subch.remove_rate(r)
 
     if DO_DERIVED_RATES:
         rates_to_derive = subch.backward().get_rates()
